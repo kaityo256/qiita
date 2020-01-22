@@ -44,6 +44,10 @@ $$
 
 本稿では、Langevin方程式の数値解法と、どんな数値解法を採用したらどちらの解釈をしたことになるのかをまとめる。以下、確率微分方程式でよく用いられるような表記(Wiener過程を$dW_t$で表現するなど)ではなく、Langevin方程式の形で表記するので注意されたい。
 
+コードはここに置いておきます。
+
+[https://github.com/kaityo256/multiplicative_langevin](https://github.com/kaityo256/multiplicative_langevin)
+
 # Ito解釈とStratonovich解釈
 
 以下のようなLangevin方程式を考える。
@@ -324,7 +328,7 @@ $$
 
 となる。
 
-### Euler-Maruyama
+### Euler-Maruyama法
 
 まず、Euler-Maruyama法を適用してみよう。Ito解釈をしていることになるため、定常状態は
 
@@ -335,7 +339,7 @@ $$
 となるはずである。数値計算スキームは
 
 $$
-x_{t+h} = x_t - x^3 h + x w_1(0, 2h) + w_2(0,2h)
+x_{t+h} = x_t - x^3 h + x_t w_1(0, 2h) + w_2(0,2h)
 $$
 
 となる。ただし、$w_1, w_2$はガウス分布に従う独立な確率変数である。例えばコードは以下のように書ける。
@@ -360,3 +364,152 @@ $$
 
 結果は以下の通り。
 
+![ito.png](ito.png)
+
+定常分布が、Stratonovich解釈ではなくIto解釈に対応するFPEの定常分布になっていることがわかる。
+
+### Two-step法
+
+次に、Two-step法で時間発展させてみよう。数値積分スキームは
+
+$$
+\begin{aligned}
+x^I_{t+h} &= x_t - x^3 h + x_t w_1(0, 2h) + w_2(0,2h) \\
+x_{t+h} &= x_t - x^3 h + \frac{x_t + x^I_{t+h}}{2}w_1(0, 2h) + w_2(0,2h)
+\end{aligned}
+$$
+
+で与えられる。対応するコードは、
+
+```cpp
+  std::mt19937 mt1(1), mt2(2);
+  const double h = 0.01;
+  double x = 0.0;
+  double t = 0.0;
+  std::vector<double> data;
+  std::normal_distribution<double> nd(0.0, sqrt(2.0 * h));
+  for (int i = 0; i < N; i++) {
+    double w1 = nd(mt1);
+    double w2 = nd(mt2);
+    double x_i = x + (-x * x * x) * h + x * w1 + w2;
+    x = x + (-x * x * x) * h + (x + x_i) * 0.5 * w1 + w2;
+    t += h;
+    data.push_back(x);
+  }
+```
+
+と書ける。
+
+結果は以下の通り。
+
+![twostep.png](twostep.png)
+
+分布関数がStratonovich解釈に対応するFPEの定常分布になっていることがわかる。
+
+### Milstein法
+
+次に、Milstein法を試してみよう。Milstein法はIto/Stratonovich解釈のどちらにも使えるが、Two-step法から導かれるMilstein法はStratonovich解釈になるはずである。
+
+数値積分スキームは以下の通り。
+
+$$
+x_{t+h} = x_t - x_t^3 h 
++ x_t w_1(0, 2h)
++ \frac{1}{2} x_t w_1(0, 2h)^2
++ w_2(0,2h)
+$$
+
+対応するコードは、例えば以下のようになる。
+
+```cpp
+  std::mt19937 mt1(1), mt2(2);
+  const double h = 0.01;
+  double x = 0.0;
+  double t = 0.0;
+  std::vector<double> data;
+  std::normal_distribution<double> nd(0.0, sqrt(2.0 * h));
+  for (int i = 0; i < N; i++) {
+    double w1 = nd(mt1);
+    double w2 = nd(mt2);
+    x += (-x * x * x) * h;
+    x += x * w1;
+    x += 0.5 * x * w1 * w1;
+    x += w2;
+    t += h;
+    data.push_back(x);
+  }
+```
+
+結果は、想定どおりStratonovich解釈に対応するFPEの定常分布になる。
+
+![milstein.png](milstein.png)
+
+### Stratonovich+Euler-Maruyama法
+
+Langevin方程式が
+
+$$
+\dot{x}_t = f(x_t) + g(x_t) \hat{R}(t)
+$$
+
+で与えられている場合、これをStratonovich解釈だと思って、Ito解釈に変形すると
+
+$$
+\dot{x}_t = f(x_t) + \frac{g'(x_t)g(x_t)}{2} +  g(x_t) \hat{R}(t)
+$$
+
+となる。
+
+今回の例では、
+
+$$
+\dot{x} = -x^3 + x\hat{R}_1 + \hat{R}_2
+$$
+
+というLangevin方程式を
+
+$$
+\dot{x} = -x^3 + x + x\hat{R}_1 + \hat{R}_2
+$$
+
+と変形すれば、Stratonovich解釈からIto解釈に変形したことになる。このLangevin方程式をあらためてEuler-Maruyamaで解けば、もとのLangevin方程式をStratonovich解釈したことになるはずである。
+
+積分スキームはこうなる。
+
+$$
+x_{t+h} = -(x_t^3 + x_t) h + x_t w_1(0, 2h) + w_2(0,2h)
+$$
+
+対応するコード例は以下の通り。
+
+```cpp
+  std::mt19937 mt1(1), mt2(2);
+  const double h = 0.01;
+  double x = 0.0;
+  double t = 0.0;
+  std::vector<double> data;
+  std::normal_distribution<double> nd(0.0, sqrt(2.0 * h));
+  for (int i = 0; i < N; i++) {
+    double w1 = nd(mt1);
+    double w2 = nd(mt2);
+    x += -(x * x * x - x) * h;
+    x += x * w1;
+    x += w2;
+    t += h;
+    data.push_back(x);
+  }
+```
+
+結果は、想定どおりStratonovich解釈した場合の定常分布に収束する。
+
+![stratonovich.png](stratonovich.png)
+
+# まとめ
+
+乗法的なノイズを持つLangevin方程式を扱うと、「あれ？いまItoだっけ？Stratonovichだっけ？」とよく混乱するので整理してみた。本稿が誰かの役に立てば幸いである。
+
+# 謝辞と参考文献
+
+産総研の中村さんにEuler-Maruyama法を、慶応義塾大学の巽さんにTwo-step法を教えていただきました。確率微分方程式の数値積分法とIto/Stratonovich解釈については、以下の論文が一番わかりやすかったです。
+
+* [Stochastic algorithms for discontinuous multiplicative white noise](https://journals.aps.org/pre/abstract/10.1103/PhysRevE.81.032104), R. Perez–Carrasco and J. M. Sancho, Phys. Rev. E 81, 032104, doi:[10.1103/PhysRevE.81.032104](https://doi.org/10.1103/PhysRevE.81.032104)
