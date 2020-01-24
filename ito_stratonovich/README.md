@@ -6,13 +6,13 @@
 粒子が環境からランダムな力を受けるような運動を表現する運動方程式は、Langevin方程式と呼ばれる。例えば以下のようなものである。
 
 $$
-\dot{x}_t = -\gamma x_t + \sqrt{2D} \hat{R}
+\dot{x}_t = -\gamma x_t + \sqrt{D} \hat{R}
 $$
 
 右辺第一項は摩擦項、第二項は揺動項を表し、$\hat{R}$は
 
 $$
-\left<\hat{R}(t)\hat{R}(t') \right> = \delta(t-t') 
+\left<\hat{R}(t)\hat{R}(t') \right> = 2\delta(t-t')
 $$
 
 $$
