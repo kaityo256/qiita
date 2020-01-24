@@ -1,0 +1,12 @@
+
+# スピン系のグラフ表現とImproved Estimator
+
+# はじめに
+
+スピン系をモンテカルロシミュレーションする時、Swendsen-Wang法やWolff法など、Fortuin-Kasteleyn表現を用いたクラスターアップデートアルゴリズムを使うと非常に効率良くサンプリングができます。さらに、Fortuin-Kasteleyn表現が得られている時、普通にサンプリングするよりも分散が小さくなるImproved Estimatorを構成できます。
+
+本稿では、Ising模型の磁化やビンダー比のImproved Estimatorの導出と、どのくらい分散が小さくなるのかの説明をします。
+
+コードは
+
+
