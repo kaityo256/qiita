@@ -23,7 +23,7 @@ def run(filename, a_sin)
   NSAMPLE.times do
     delta = rand * 2 * Math::PI
     NDATA.times do |i|
-      y = func(i, delta, a_sin)
+      y = func(i+1, delta, a_sin)
       data[i].push y
     end
   end
@@ -31,7 +31,7 @@ def run(filename, a_sin)
   open(filename, "w") do |f|
     NDATA.times do |i|
       a, s = stat(data[i])
-      f.puts "#{i} #{a} #{s}"
+      f.puts "#{i+1} #{a} #{s}"
     end
   end
   puts filename
