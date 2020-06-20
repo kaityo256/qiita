@@ -324,7 +324,218 @@ g++ -E -std=c++11 -pipe -fno-strict-aliasing -Wall -Wundef -Wextra -Wno-sign-com
 これで`expanded.cc`という、単独でコンパイルできるファイルができました。コンパイルして利用メモリを確認してみましょう。
 
 ```sh
-/usr/bin/time -v g++ -O3 -S expanded.cc
+$ /usr/bin/time -v g++ -O3 -S expanded.cc
+        Command being timed: "g++ -O3 -S expanded.cc"
+        User time (seconds): 73.39
+        System time (seconds): 1.48
+        Percent of CPU this job got: 99%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 1:15.06
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 1993036
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 1390330
+        Voluntary context switches: 4
+        Involuntary context switches: 94
+        Swaps: 0
+        File system inputs: 0
+        File system outputs: 61456
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
 ```
 
+2GBくらい使っています。元のビルドオプションには`-g`もついていたため、さらにメモリを食っていましたが、外しても結構あります。行数を見てみましょうか。
 
+```sh
+$ wc expanded.cc
+ 203875  533178 5907751 expanded.cc
+```
+
+20万行ですか。なかなかですね。
+
+とりあえず、`g++ -E`で生成したファイルの常として、空白行や`#`で始まる行が多いため、それらを削除しましょう。
+
+```sh
+sed -i '/^$/d' expanded.cc
+sed -i '/^#/d' expanded.cc
+```
+
+これで15万行になりますが、まだ多いです。気合で中身を見てみると、ARMのISAを定義しているところが大部分で、最後の方に命令のデコーダ関連と思しきコードがあります。例えばこんなのです。
+
+```cpp
+    static StaticInstPtr
+    decodeNeonThreeRegistersSameLength(ExtMachInst machInst)
+    {
+...
+```
+
+なんか三個のレジスタで同じ長さの何かをどうにかするコードなんでしょうね。
+
+で、ここからは気合です。`#if 0`～`#endif`で囲ってはコンパイルして、どの部分がメモリを食うのかを調べます。すると、最後のデコーダまわりで、一番最後の名前空間
+
+```cpp
+namespace ArmISAInst {
+...
+}
+```
+
+1万3千行のコンパイルにメモリを食っていることがわかりました。全体が15万5千行あるので、10%未満ですね。実はそのコードの前あたりでテンプレートが大量にあるので、テンプレート展開が原因だと疑っていたのですが、`namespace ArmISAInst`で囲まれた問題箇所にはテンプレートまわり怪しいところがありません。その代わり、やたらとswitch、caseがありました。特に、多段switchがあるのが気になります。
+
+```cpp
+          case 0x2:
+          case 0x3:
+          {
+            uint32_t imm12 = bits(machInst, 21, 10);
+            uint8_t shift = bits(machInst, 23, 22);
+            uint32_t imm;
+            if (shift == 0x0)
+                imm = imm12 << 0;
+            else if (shift == 0x1)
+                imm = imm12 << 12;
+            else
+                return new Unknown64(machInst);
+            switch (opc) {
+              case 0x0:
+                return new AddXImm(machInst, rdsp, rnsp, imm);
+              case 0x1:
+                return new AddXImmCc(machInst, rdzr, rnsp, imm);
+              case 0x2:
+                return new SubXImm(machInst, rdsp, rnsp, imm);
+              case 0x3:
+                return new SubXImmCc(machInst, rdzr, rnsp, imm);
+            }
+          }
+```
+
+fall throughがあるのも気になりますね。巨大なswitch文、特に多段switchがあることがメモリを使う原因なのでしょうか？
+
+## 多段switch
+
+というわけで、多段switch文を吐くスクリプトを組んで、実際にコンパイルしてメモリを食うことを確認してみましょう。
+
+こんなRubyスクリプトを書きます。
+
+```rb
+if ARGV.size != 2
+  puts "usage: ruby switch.rb max num"
+  exit
+end
+
+$max_level = ARGV[0].to_i
+num = ARGV[1].to_i
+
+def print_switch(num, level)
+  indent = "  "*level + "  "
+  puts "#{indent}switch(i#{level}){"
+  num.times do |i|
+    puts "#{indent}  case #{i}:"
+    if level < $max_level
+      print_switch(num, level+1)
+    else
+      puts "#{indent}    return #{i};"
+    end
+  end
+  puts "#{indent}}"
+end
+
+arg = Array.new($max_level+1) { |i| "int i"+i.to_s }.join(",")
+puts "int func(#{arg}){"
+print_switch(num, 0)
+puts "}"
+```
+
+これは、n段m行のswitchを持つコードを吐くスクリプトです。2段2行ならこんな感じです。
+
+```sh
+$ ruby switch.rb 1 2
+int func(int i0,int i1){
+  switch(i0){
+    case 0:
+    switch(i1){
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+    }
+    case 1:
+    switch(i1){
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+    }
+  }
+}
+```
+
+nを指定しているのにn+1段になっているのに後から気が付きましたが、気にしないことにします。まずは5段10行から試しましょうか。
+
+```sh
+$ ruby switch.rb 4 10 > test.cpp
+$ /usr/bin/time -v g++ -O3 -S test.cpp
+        Command being timed: "g++ -O3 -S test.cpp"
+        User time (seconds): 48.12
+        System time (seconds): 0.96
+        Percent of CPU this job got: 99%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 0:49.26
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 642564
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 199589
+        Voluntary context switches: 0
+        Involuntary context switches: 0
+        Swaps: 0
+        File system inputs: 0
+        File system outputs: 0
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
+```
+
+627MBですか。もう一声って感じですかね。5段12行でいきましょう。
+
+```sh
+$ ruby switch.rb 4 12 > test.cpp
+$ /usr/bin/time -v g++ -O3 -S test.cpp
+        Command being timed: "g++ -O3 -S test.cpp"
+        User time (seconds): 301.32
+        System time (seconds): 3.32
+        Percent of CPU this job got: 99%
+        Elapsed (wall clock) time (h:mm:ss or m:ss): 5:05.30
+        Average shared text size (kbytes): 0
+        Average unshared data size (kbytes): 0
+        Average stack size (kbytes): 0
+        Average total size (kbytes): 0
+        Maximum resident set size (kbytes): 1263288
+        Average resident set size (kbytes): 0
+        Major (requiring I/O) page faults: 0
+        Minor (reclaiming a frame) page faults: 569445
+        Voluntary context switches: 0
+        Involuntary context switches: 0
+        Swaps: 0
+        File system inputs: 0
+        File system outputs: 0
+        Socket messages sent: 0
+        Socket messages received: 0
+        Signals delivered: 0
+        Page size (bytes): 4096
+        Exit status: 0
+```
+
+コンパイルに5分かかって、メモリも1.2GiB使ってますね。ちなみにこのコードは56万行で、switchは5段のが一つ、元のコードは1万3千行で、switchも2段くらいのが多数という違いがあります。でもまぁ、テストコードは単に整数をreturnしてますが、元のコードはなんかオブジェクトを作ってreturnとかしてたので、その絡みで余計にメモリを食ったのかな、という気がします。本当にそうかは知りませんが。
+
+# まとめ
+
+Dockerファイルがビルドできない、という連絡を受け、その原因がメモリ不足であること、その原因となるファイルの特定とかやっているうちに、いつのまにかコンパイラをいじめていました。なぜだ？
