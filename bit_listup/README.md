@@ -39,7 +39,7 @@ template <class T> void search(T s1, T s2) {
 
 これに、`s1`と`s2`に同じ初期値を与えて呼んでやればよい。ソースコード全体はこんな感じ。
 
-```cpp:test.cpp
+```cpp
 #include <cstdint>
 #include <iostream>
 
@@ -102,6 +102,7 @@ s2 ^= lsb;
 
 そして、このビットを「消す場合」と「消さない場合」の二通りで分岐する。
 
+
 ```c++
 search(s1, s2); //このビットを消さない場合
 T s3 = s1 ^ lsb;
@@ -112,7 +113,7 @@ search(s3, s2); //このビットを消す場合
 
 例えば`s=6`の場合はこんな感じになる。
 
-![fig/fig.png](fig/fig.png)
+![image0.png](image0.png)
 
 要するに、検討するビットすべてをスキャンし、それぞれについて「消す」か「消さないか」の二通りで分岐していく形になっている。
 
