@@ -1,0 +1,3 @@
+[submodule "qiita_sync"]
+	path = qiita_sync
+	url = https://github.com/kaityo256/qiita_sync.git
