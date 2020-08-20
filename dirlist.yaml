@@ -2,7 +2,7 @@
 Pythonでフーリエ変換: python_fft
 822823回マクロを展開するとGCCが死ぬ: macro
 WindowsのVSCodeで__m256d型のインデックスアクセスにenumを使うと怒られる: enum
-Dockerファイルがビルドできなかったのでコンパイラをいじめる:
+Dockerファイルがビルドできなかったのでコンパイラをいじめる: docker_memory
 分子動力学法で一瞬文字が浮かび上がるアニメーションを作る:
 Fashion-MNISTのデータを仕分けしてPNGファイルで保存:
 見たら「ん？」となるエラーバーのグラフ:
