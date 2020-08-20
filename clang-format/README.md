@@ -1,4 +1,4 @@
-# WindowsのVSCodeでclang-formatが効かない
+# WindowsのVSCodeでclang-formatが効かない時の確認と対処
 
 ## TL;DR
 
@@ -24,7 +24,7 @@ VSCodeでC/C++のファイルを編集する際、まずC/C++のプラグイン�
 
 明示的にフォーマットさせるため、Ctrl+Shift+Pでコマンドパレット出して「format」と入力して「ドキュメントのフォーマット (Format Document)」を選んで実行すると、右下に「write EPIPE」というエラーが出てくる。こんなの。
 
-![epipe.png](epipe.png)
+![image0.png](image0.png)
 
 調べてみると、Clang-Formatのプラグインの[リポジトリ](https://github.com/xaverh/vscode-clang-format-provider)に、同じ問題を報告した[issue](https://github.com/xaverh/vscode-clang-format-provider/issues/83)があった。
 
@@ -36,7 +36,7 @@ VSCodeでC/C++のファイルを編集する際、まずC/C++のプラグイン�
 
 Clang-Formatプラグインは、clang-formatが見つからないと、VSCodeのC/C++プラグインが持っているclang-formatを使う。それは
 
-C:\Users\ユーザー名\.vscode\extensions\ms-vscode.cpptools-0.27.0\LLVM\bin\
+`C:\Users\ユーザー名\.vscode\extensions\ms-vscode.cpptools-0.27.0\LLVM\bin\`
 
 にあるのだが、どうもこれとの連携に問題があるらしい。
 
@@ -44,7 +44,7 @@ C:\Users\ユーザー名\.vscode\extensions\ms-vscode.cpptools-0.27.0\LLVM\bin\
 
 パスを通した場合、適当なターミナル(例えばWindows PowerShell)を起動し、clang-format.exeにパスが通っていることを確認する。
 
-```sh
+```txt
 PS C:\Users\username> clang-format.exe --version
 clang-format version 10.0.0
 ```
