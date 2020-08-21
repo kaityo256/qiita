@@ -8,6 +8,8 @@ def list_articles
   data = YAML.safe_load(File.open("qiita.yaml"))
   dirlist = YAML.safe_load(File.open("dirlist.yaml"))
   ss = StringIO.new
+  # 作成日(created_at)でソート
+  data.sort! { |a, b| b["created_at"] <=> a["created_at"] }
   data.each do |article|
     title = article["title"]
     next unless dirlist[title]
