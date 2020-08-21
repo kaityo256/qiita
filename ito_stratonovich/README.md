@@ -1,7 +1,6 @@
+# Multiplicativeなノイズを持つLangevin方程式とIto/Stratonovich解釈
 
-# MultiplicativeなLangevin方程式とIto/Stratonovich解釈
-
-# はじめに
+## はじめに
 
 粒子が環境からランダムな力を受けるような運動を表現する運動方程式は、Langevin方程式と呼ばれる。例えば以下のようなものである。
 
@@ -12,7 +11,7 @@ $$
 右辺第一項は摩擦項、第二項は揺動項を表し、$\hat{R}$は
 
 $$
-\left<\hat{R}(t)\hat{R}(t') \right> = 2\delta(t-t')
+\left<\hat{R}(t)\hat{R}(t') \right> = 2\delta(t-t') 
 $$
 
 $$
@@ -44,11 +43,11 @@ $$
 
 本稿では、Langevin方程式の数値解法と、どんな数値解法を採用したらどちらの解釈をしたことになるのかをまとめる。以下、確率微分方程式でよく用いられるような表記(Wiener過程を$dW_t$で表現するなど)ではなく、Langevin方程式の形で表記するので注意されたい。
 
-コードはここに置いておきます。
+コードはここに置いておく。
 
 [https://github.com/kaityo256/multiplicative_langevin](https://github.com/kaityo256/multiplicative_langevin)
 
-# Ito解釈とStratonovich解釈
+## Ito解釈とStratonovich解釈
 
 以下のようなLangevin方程式を考える。
 
@@ -56,7 +55,7 @@ $$
 \dot{x}_t = f(x_t) + g(x_t) \hat{R}(t)
 $$
 
-先程の例と異なり、乱数$\hat{R}(t)$に、変数$x_t$に依存する項がかかっている。これを数値積分するための、Euler法を適用したい。時間刻みを$h$とし、両辺を$t$から$t+h$まで時間積分すると
+先程の例と異なり、乱数$\hat{R}(t)$に、変数$x_t$に依存する項がかかっている。これを数値積分したい。時間刻みを$h$とし、両辺を$t$から$t+h$まで時間積分すると
 
 $$
 \int_t^{t+h} \dot{x}_t dt = \int_t^{t+h}f(x_t)dt + \int_t^{t+h}g(x_t) \hat{R}(t) dt
@@ -83,7 +82,7 @@ $$
 $$
 \begin{aligned}
 \int_t^{t+h}g(x_t) \hat{R}(t) dt & \sim g(x_t) \int_t^{t+h} \hat{R}(t) dt \\
-&=  g(x_t) w(0, \sqrt{2h})
+&=  g(x_t) w(0, 2h)
 \end{aligned}
 $$
 
@@ -101,7 +100,7 @@ $$
 
 ## Stratonovich解釈
 
-先程、積分区間を$g(x_t)$で代表させた。これを積分区間の始点と終点の値の平均で代表させてみよう。すなわち、
+先程、積分区間を始点$g(x_t)$で代表させた。これを積分区間の始点と終点の値の平均で代表させてみよう。すなわち、
 
 $$
 \begin{aligned}
@@ -122,7 +121,7 @@ $$
 
 と、$g(x)$が微分の前後に分かれる形となる。
 
-# 確率微分方程式の数値積分法
+## 確率微分方程式の数値積分法
 
 ## Euler-Maruyama法
 
@@ -208,7 +207,7 @@ $$
 
 ここで$g(x_t)$が定数の場合には、Euler-MaruyamaとMilsteinは等価なスキームを与えることに注意したい。
 
-# 数値計算例
+## 数値計算例
 
 実際にLangevin方程式を数値的に問いてみて、どんな定常分布になるかを確認してみよう。
 
@@ -263,7 +262,8 @@ $$
 
 のように書ける。ガウス分布について、スキームでは分散で書いているが、コードでは標準偏差が求められることに注意。定常分布は以下の通り、対応するFPEの定常状態であるガウス分布に一致する。
 
-![additive.png](additive.png)
+![image0.png](image0.png)
+
 
 ちなみに、分布関数を描くには、まず累積分布関数を求めてから微分すると楽なので、覚えておくと良いことがあるかも。
 
@@ -328,7 +328,7 @@ $$
 
 となる。
 
-### Euler-Maruyama法
+## Euler-Maruyama法
 
 まず、Euler-Maruyama法を適用してみよう。Ito解釈をしていることになるため、定常状態は
 
@@ -364,11 +364,12 @@ $$
 
 結果は以下の通り。
 
-![ito.png](ito.png)
+![image1.png](image1.png)
+
 
 定常分布が、Stratonovich解釈ではなくIto解釈に対応するFPEの定常分布になっていることがわかる。
 
-### Two-step法
+## Two-step法
 
 次に、Two-step法で時間発展させてみよう。数値積分スキームは
 
@@ -402,11 +403,12 @@ $$
 
 結果は以下の通り。
 
-![twostep.png](twostep.png)
+![image2.png](image2.png)
+
 
 分布関数がStratonovich解釈に対応するFPEの定常分布になっていることがわかる。
 
-### Milstein法
+## Milstein法
 
 次に、Milstein法を試してみよう。Milstein法はIto/Stratonovich解釈のどちらにも使えるが、Two-step法から導かれるMilstein法はStratonovich解釈になるはずである。
 
@@ -442,9 +444,10 @@ $$
 
 結果は、想定どおりStratonovich解釈に対応するFPEの定常分布になる。
 
-![milstein.png](milstein.png)
+![image3.png](image3.png)
 
-### Stratonovich+Euler-Maruyama法
+
+## Stratonovich+Euler-Maruyama法
 
 Langevin方程式が
 
@@ -502,13 +505,13 @@ $$
 
 結果は、想定どおりStratonovich解釈した場合の定常分布に収束する。
 
-![stratonovich.png](stratonovich.png)
+![image4.png](image4.png)
 
-# まとめ
+## まとめ
 
 乗法的なノイズを持つLangevin方程式を扱うと、「あれ？いまItoだっけ？Stratonovichだっけ？」とよく混乱するので整理してみた。本稿が誰かの役に立てば幸いである。
 
-# 謝辞と参考文献
+## 謝辞と参考文献
 
 産総研の中村さんにEuler-Maruyama法を、慶応義塾大学の巽さんにTwo-step法を教えていただきました。確率微分方程式の数値積分法とIto/Stratonovich解釈については、以下の論文が一番わかりやすかったです。
 

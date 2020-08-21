@@ -12,7 +12,7 @@ Rubocopに怒られないように0埋めした桁揃え文字列を作る: form
 数式を含むMarkdownファイルをRe:VIEWにする:
 MPIでシェルコマンドを並列実行する: cps
 スピン系のグラフ表現とImproved Estimator: improved_estimator
-Multiplicativeなノイズを持つLangevin方程式とIto/Stratonovich解釈:
+Multiplicativeなノイズを持つLangevin方程式とIto/Stratonovich解釈: ito_stratonovich
 パーコレーションのモンテカルロシミュレーションコード:
 Potts模型のモンテカルロシミュレーションコード:
 PandocでMarkdownからHTMLに変換すると箇条書きのネストが反映されない:
