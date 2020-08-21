@@ -32,7 +32,7 @@ printfに4285個アスタリスクをつけるとclang++が死ぬ: printf
 Google Colaboratory上でアニメーションを表示する:
 Pandocのシンタックスハイライトのカラースキーム:
 Windowsの右クリックメニューに「VSCodeで開く」を追加する:
-tan(x)を何度も微分する:
+tan(x)を何度も微分する: tan
 YAMLとSlimで論文リストを作る:
 変数とスコープと名前解決の話: scope
 格子計算プログラム生成言語Formuraを使ってみる その4:
