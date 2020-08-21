@@ -6,13 +6,13 @@
 
 コードブロックに背景色をつけない場合
 
-```tex:mytemplate.tex
+```tex
 \newenvironment{Shaded}{\Huge}{}
 ```
 
 コードブロックに背景色をつける場合
 
-```tex:mytemplate.tex
+```tex
 \renewenvironment{Shaded}{\begin{snugshade}\Huge}{\end{snugshade}}
 ```
 
@@ -46,7 +46,7 @@ pandoc test.md -o test.pdf --latex-engine=lualatex -V documentclass=ltjarticle
 
 出来上がったPDFがこちらです。
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/3fdb2977-00a3-31cb-a7b3-254120ea83d4.png)
+![image0.png](image0.png)
 
 で、このコードブロックのフォントサイズを変えるために、pandocが吐くソースコードを見てみます。
 
@@ -86,13 +86,13 @@ $ lualatex test.tex
 
 できたPDFがこちらです。
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/635a5c57-82e2-2e5c-2dea-53ede69370f2.png)
+![image1.png](image1.png)
 
 無事にコードブロック内のフォントサイズが大きくなりました。
 
 で、いちいちLaTeXソースを吐いてそれを修正するのは面倒なので、修正命令をファイルに書いておいて、後から命令を読み込ませることにします。一度`\newenvironment`されたものを再定義する必要があるので、`\renewenvironment`を使う必要があります。
 
-```tex:mytemplate.tex
+```tex
 \newenvironment{Shaded}{\Huge}{}
 ```
 
@@ -112,11 +112,11 @@ $ pandoc test.md -o test.pdf --latex-engine=lualatex -V documentclass=ltjarticle
 $ pandoc test.md -o test.pdf --latex-engine=lualatex -V documentclass=ltjarticle --highlight-style=breezeDark
 ```
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/2a360e47-83e9-a8ea-34d1-54970c94d74e.png)
+![image2.png](image2.png)
 
 しかし、先程作ったテンプレートを読み込むと文字色はbreezeDarkのままですが、背景色が消えてしまいます。
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/ad884806-bf3c-4d22-1c8b-2ea14bb1fab2.png)
+![image3.png](image3.png)
 
 これは、背景色がある場合の`Shaded`環境がこのように定義されているからです。
 
@@ -126,11 +126,11 @@ $ pandoc test.md -o test.pdf --latex-engine=lualatex -V documentclass=ltjarticle
 
 この`snugshade`環境が背景色をつけるので、その直後にフォントサイズ変更命令を突っ込みます。
 
-```tex:mytemplate.tex
+```tex
 \renewenvironment{Shaded}{\begin{snugshade}\Huge}{\end{snugshade}}
 ```
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/21398ffb-61db-6b1a-8d04-45bdb1435a77.png)
+![image4.png](image4.png)
 
 背景色付きでフォントサイズが変化しました。
 
@@ -138,12 +138,13 @@ $ pandoc test.md -o test.pdf --latex-engine=lualatex -V documentclass=ltjarticle
 
 ちなみに背景色は`\definecolor`で上書きできます。
 
-```tex:mytemplate
+```tex
 \renewenvironment{Shaded}{\begin{snugshade}\Huge}{\end{snugshade}}
 \definecolor{shadecolor}{RGB}{255,200,200}
 ```
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/8f717364-67c1-7fba-228e-2a42179428cb.png)
+![image5.png](image5.png)
+
 
 ## まとめ
 
