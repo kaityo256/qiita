@@ -11,7 +11,7 @@ WindowsのVSCodeでclang-formatが効かない時の確認と対処: clang-forma
 Rubocopに怒られないように0埋めした桁揃え文字列を作る: format
 数式を含むMarkdownファイルをRe:VIEWにする:
 MPIでシェルコマンドを並列実行する: cps
-スピン系のグラフ表現とImproved Estimator:
+スピン系のグラフ表現とImproved Estimator: improved_estimator
 Multiplicativeなノイズを持つLangevin方程式とIto/Stratonovich解釈:
 パーコレーションのモンテカルロシミュレーションコード:
 Potts模型のモンテカルロシミュレーションコード:
