@@ -8,13 +8,14 @@
 
 Ballistic版
 
-![Ballistic版](b.gif)
+![image0.gif](image0.gif)
 
 Diffusion版
 
-![Diffusion版](d.gif)
+![image1.gif](image1.gif)
 
-ソースは以下の置いておきます。
+
+ソースは以下に置いておきます。
 
 [https://github.com/kaityo256/stringtext](https://github.com/kaityo256/stringtext)
 
@@ -65,7 +66,7 @@ context.show_text('スパコン')
 
 ## 分子動力学シミュレーション
 
-### Ballistic版
+## Ballistic版
 
 まずは単純に、全ての粒子に等速直線運動をさせてみましょう。アニメーションGIFにしたときに、ループさせたいので、適当なステップ後にもとの場所に戻ってきて欲しいですね。
 
@@ -95,13 +96,14 @@ Particle = Struct.new(:x, :y, :vx, :vy, :r, :g, :b)
 
 最初は「スパコン」の文字が表示されています。
 
-![ball_1](ball/img107.png)
+![image2.png](image2.png)
 
 これが徐々に崩れていきます。
 
-![ball_2](ball/img109.png)
+![image3.png](image3.png)
 
-![ball_3](ball/img111.png)
+![image4.png](image4.png)
+
 
 あとは、最初から文字が見えるとつまらないので、少しインデックスをずらしてファイルを作成すれば完成です。
 
@@ -118,11 +120,12 @@ end
 
 さて、この方法は楽ちんですが、全ての粒子が等速直線運動をして、かつその速度ベクトルのバリエーションが少ないため、何度か変な模様が出現してしまいます。たとえばタイミングによってはこんな感じに「あ、文字が隠れてるな」ということがわかってしまいます。
 
-![ball_4](ball/img006.png)
+![image5.png](image5.png)
+
 
 これを防ぐため、違う方法も考えてみましょう。
 
-### Diffusion版
+## Diffusion版
 
 先ほどは等速直線運動をさせましたが、次はランダムウォークをさせましょう。しかし、ループさせたいので、要素の和が0となるような配列を作り、それを各ステップの速度にしましょう。
 
@@ -161,17 +164,17 @@ end
 
 最初は「スパコン」の文字が表示され、それが徐々に崩れていくのは同じです。
 
-![diffuse_1](diffuse/img107.png)
+![image6.png](image6.png)
 
 これが徐々に崩れていきます。
 
-![diffuse_2](diffuse/img109.png)
+![image7.png](image7.png)
 
-![diffuse_3](diffuse/img111.png)
+![image8.png](image8.png)
 
 崩れ方は等速直線運動よりゆっくりです。また、拡散で広がっていくので、もっとも広がった状態でも、まだにじんだ文字が見えてしまっています。
 
-![diffuse_3](diffuse/img006.png)
+![image9.png](image9.png)
 
 ## まとめ
 
