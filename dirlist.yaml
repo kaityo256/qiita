@@ -9,7 +9,7 @@ Fashion-MNISTのデータを仕分けしてPNGファイルで保存: fashion_mni
 WindowsのVSCodeでclang-formatが効かない時の確認と対処: clang-format
 線分の交差判定と交点特定: intersect
 Rubocopに怒られないように0埋めした桁揃え文字列を作る: format
-数式を含むMarkdownファイルをRe:VIEWにする:
+数式を含むMarkdownファイルをRe:VIEWにする: review
 MPIでシェルコマンドを並列実行する: cps
 スピン系のグラフ表現とImproved Estimator: improved_estimator
 Multiplicativeなノイズを持つLangevin方程式とIto/Stratonovich解釈: ito_stratonovich
