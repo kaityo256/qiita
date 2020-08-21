@@ -4,7 +4,7 @@ Pythonでフーリエ変換: python_fft
 WindowsのVSCodeで__m256d型のインデックスアクセスにenumを使うと怒られる: enum
 Dockerファイルがビルドできなかったのでコンパイラをいじめる: docker_memory
 分子動力学法で一瞬文字が浮かび上がるアニメーションを作る:
-Fashion-MNISTのデータを仕分けしてPNGファイルで保存:
+Fashion-MNISTのデータを仕分けしてPNGファイルで保存: fashion_mnist_dump
 見たら「ん？」となるエラーバーのグラフ: error_bar
 WindowsのVSCodeでclang-formatが効かない時の確認と対処: clang-format
 線分の交差判定と交点特定:

@@ -1,7 +1,6 @@
+# Fashion-MNISTのデータを仕分けしてPNGファイルで保存
 
-# Fashion-MNISTのデータを仕分けしてPNGファイ
-
-# はじめに
+## はじめに
 
 機械学習、してますか？＞挨拶
 
@@ -13,7 +12,7 @@
 
 [https://github.com/kaityo256/fashion_mnist_dump](https://github.com/kaityo256/fashion_mnist_dump)
 
-# 使い方
+## 使い方
 
 実行するだけです。TensorFlowのVersion 2以降が必要だと思います。
 
@@ -53,15 +52,15 @@ train
 
 例えばテストデータの`Sandal`なら、
 
-![サンダル](sandals.png)
+![image0.png](image0.png)
 
 `Dress`なら
 
-![ドレス](dresses.png)
+![image1.png](image1.png)
 
 みたいに仕分けされて保存されます。
 
-# スクリプト
+## スクリプト
 
 スクリプトも短いので全部掲載します。
 
@@ -154,21 +153,21 @@ def save_img(filename, data):
 
 特に難しいことはないですが、学習に使う時には、このデータを例えば-1.0から1.0までの実数データにして、かつ28x28の二次元データではなく784の一次元データにflattenしたりした方が使い勝手が良いでしょう(CNNなら二次元のままの方がいいかも)。
 
-# まとめ
+## まとめ
 
 TensorFlow/Kerasを使ってFashion-MNISTのデータを取得し、仕分けしてファイルとして保存してみました。データをぼーっと見てると面白いです。例えば
 
 「あ、Gapだ」と思ったり、
-![83.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/c8bf58d1-07b0-7983-1f89-90582912e95c.png)
+![image2.png](image2.png)
 
 人間が見てもなんだかわからないものがあったり[^1]
-![804.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/984e38c5-3441-d67e-cee2-31cd0627c2ea.png)
+![image3.png](image3.png)
 
 なんかパンツのようなものと一緒に写っていたり
-![10.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/acf6452a-6c66-7e40-a293-7c925ddaf912.png)
+![image4.png](image4.png)
 
 やっぱりなんだかわからないものがあったり・・・
-![20.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/a2a88892-9a90-2d4e-a442-f0663dba243a.png)
+![image5.png](image5.png)
 
 [^1]: 正解(ラベル)はバッグだそうです。
 
