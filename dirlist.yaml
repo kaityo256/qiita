@@ -14,7 +14,7 @@ MPIでシェルコマンドを並列実行する: cps
 スピン系のグラフ表現とImproved Estimator: improved_estimator
 Multiplicativeなノイズを持つLangevin方程式とIto/Stratonovich解釈: ito_stratonovich
 パーコレーションのモンテカルロシミュレーションコード:
-Potts模型のモンテカルロシミュレーションコード:
+Potts模型のモンテカルロシミュレーションコード: potts_2d
 PandocでMarkdownからHTMLに変換すると箇条書きのネストが反映されない:
 LaTeXiTが沈黙した時の対応:
 CC0ライセンスの空白PDFファイル:
