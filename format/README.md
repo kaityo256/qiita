@@ -1,7 +1,6 @@
-
 # Rubocopに怒られないように0埋めした桁揃え文字列を作る
 
-# TL;DR
+## TL;DR
 
 1〜3桁の整数`size`があり、そこから例えば`L064.dat`みたいなファイル名を作りたい時、Rubocopに怒られないようにするには
 
@@ -11,13 +10,13 @@ filename = format("L%<size>03d.dat", size: size)
 
 とすれば良い。これだけなんだけど、ここまで来るのに妙に苦労したのでRubocopの文句からこの記事にたどり着けるように詳細を書いておきます。
 
-# Rubocopに怒られる
+## Rubocopに怒られる
 
 ## C言語っぽく
 
 1〜3桁の整数`size`があり、そこから例えば`L064.dat`みたいなファイル名を作りたい。C言語から入った人なら`sprintf`使ってこんな感じに書くと思う。
 
-```rb:format1.rb
+```rb
 size = 10
 puts sprintf("L%03d.dat", size)
 ```
@@ -47,7 +46,7 @@ puts sprintf("L%03d.dat", size)
 
 というわけで`format`を使いましょう。`sprintf`の代わりに`format`って書いただけ。
 
-```rb:format2.rb
+```rb
 size = 10
 puts format("L%03d.dat", size)
 ```
@@ -76,7 +75,7 @@ Unannotated tokensを使うなと言ってるようですね。
 
 Template tokensというのは、`format`の文字列に引数としてハッシュを渡すと、`%{name}`などで、キーを参照してそのまま代入してくれる機能です。ただし、`%{name}`を使うとフォーマットできないので、フォーマットしたい場合はフォーマット済み文字列を渡す必要があります。こんな感じでしょうか。
 
-```rb:format3.rb
+```rb
 size = 10
 puts format("L%{size}.dat", size: size.to_s.rjust(3, "0"))
 ```
@@ -103,7 +102,7 @@ Template tokens `%{foo}`ではなく、annotated tokens`%<foo>s`を使え、と�
 
 Annotated tokensは、templated tokensと同様に引数にハッシュを与えますが、`%<name>d`のようにフォーマット指定できます。これを使うとこうなりますかね。
 
-```rb:format4.rb
+```rb
 size = 10
 puts format("L%<size>d.dat", size: size)
 ```
@@ -114,15 +113,19 @@ puts format("L%<size>d.dat", size: size)
 
 Annotated tokensでは、`printf`と同様にフォーマット指定子が使えます。例えば、3桁の整数で左を0埋めしたければ、`%<name>03d`と書けます。
 
-```rb:format5.rb
+```rb
 size = 10
 puts format("L%<size>03d.dat", size: size)
 ```
 
 ようやくRubocopに文句を言われずに、0埋めした桁揃え文字列を作ることができました。
 
-# まとめというか・・・
+## まとめというか・・・
 
 普段VSCodeを使ってますが、ちょっとしたスクリプトはVimで書いてます。で、VimでRubocopで確認するようにしてみたらRubocopのうるさいことうるさいこと。自動的に直せるところは直すauto-correctもあるのですが、保存時にこれが走るようにしたらかえって鬱陶しかったので、今のところ手でなおしています。
 
-「自由に、好きなように書ける」のがRubyの良いところだと思ってたのですが、その思想とLinterはどうも相性が悪いような気がしますね・・・
+「自由に、好きなように書ける」のがRubyの良いところだと思っているのですが、その思想とLinterはどうも相性が悪いような気がしますね・・・
+
+## 参考
+
+* [RuboCop | Style/FormatString](https://qiita.com/tbpgr/items/d11b28753dc893920db6)
