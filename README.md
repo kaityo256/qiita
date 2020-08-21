@@ -131,6 +131,7 @@ Qiitaに投稿した記事のアーカイブ
   * 作成：2019-01-29 14:59:04 +0900
   * 更新：2019-01-29 14:59:04 +0900
 
+
 ## ライセンス
 
 Copyright (C) 2018-2019 Hiroshi Watanabe
@@ -143,3 +144,4 @@ This article and pictures are licensed under a [Creative Commons Attribution 4.0
 本リポジトリに含まれるプログラムは、[MITライセンス](https://opensource.org/licenses/MIT)で提供する。
 
 The source codes in this repository are licensed under [the MIT License](https://opensource.org/licenses/MIT).
+
