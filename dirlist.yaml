@@ -28,7 +28,7 @@ PandocでLaTeX経由でPDFを出力する際にコードブロックのフォン
 スパコンないない:
 アーキテクチャシミュレータGem5を使ってみる　その2「OoOを実感する」:
 アーキテクチャシミュレータGem5を使ってみる:
-printfに4285個アスタリスクをつけるとclang++が死ぬ:
+printfに4285個アスタリスクをつけるとclang++が死ぬ: printf
 Google Colaboratory上でアニメーションを表示する:
 Pandocのシンタックスハイライトのカラースキーム:
 Windowsの右クリックメニューに「VSCodeで開く」を追加する:

@@ -1,4 +1,3 @@
-
 # printfに4285個アスタリスクをつけるとclang++が死ぬ
 
 ## はじめに
@@ -9,7 +8,7 @@
 
 なんと、`printf`を`(***printf)`などとしても普通に呼べるのだそうです。それじゃ、アスタリスク100個とかつけても大丈夫なのでしょうか。
 
-```cpp:test.cpp
+```cpp
 #include <cstdio>
 int main(){
   (****************************************************************************************************printf)("Hello World\n");
@@ -26,7 +25,7 @@ Hello World
 
 では、もっとつけたらどうでしょう？1万個つけたら？
 
-```rb:check.rb
+```rb
 def check(n)
   s = "*"*n
   f = open("test.cpp","w")
@@ -87,7 +86,7 @@ clang: note: diagnostic msg:
 
 つってもRubyで手抜き二分探索書くだけ。
 
-```rb:search.rb
+```rb
 def check(n)
   s = "*"*n
   f = open("test.cpp","w")
