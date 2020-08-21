@@ -42,7 +42,7 @@ YAMLとSlimで論文リストを作る:
 定数配列がからんだ定数畳み込み最適化: constarray
 "「サイゼリヤで1000円あれば最大何kcal摂れるのか」をマルコフ連鎖モンテカルロで解いてみた。":
 線形代数を学ぶ理由: linalg
-CentOS7にDockerでWordPressを入れる:
+CentOS7にDockerでWordPressを入れる: wordpress
 VSCodeでコピーする時に「書式なし」をデフォルトにする:
 ラプラス変換とフーリエ変換の関係: laplace
 重み付きランダムサンプリングアルゴリズム:

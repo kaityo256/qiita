@@ -1,7 +1,6 @@
-
 # CentOS7にDockerでWordPressを入れる
 
-# はじめに
+## はじめに
 
 CentOSでDockerを使ってWordPressを立ち上げたい、という人はわりといると思うし、記事もすでにたくさんある。しかし、僕が必要な情報が一箇所に集まっていなかったのと、失敗したときに「どこまでうまくいっているのか」「どこでこけているのか」がわかりにくくて苦労した。というわけで、ステップごとにうまくいっているか確認しながら作業を進める。本稿では新規インストールしたCentOS 7で8080番にWordPressが立ち上げることを目的とする。
 
@@ -12,7 +11,7 @@ CentOSでDockerを使ってWordPressを立ち上げたい、という人はわ�
 * dockerはそのままでは一般ユーザアカウントから実行できない。dockerグループを追加し、グループパスワードを設定した上で、dockerを再起動、後は必要に応じてnewgrpすることで実行できるようにする。
 * docker-composeコマンドで起動すると、ボリュームにプロジェクト名のプレフィックスがつく。生のdockerコマンドで作ったボリュームを利用したい時には、予めそれを見越した名前にするか、ボリュームのリネームが必要。
 
-# 作業
+## 作業
 
 ## CentOS7インストール直後からdockerの動作確認まで
 
@@ -83,7 +82,7 @@ docker run --name wordpress --link mysql:mysql -d -p 8080:80 wordpress
 
 この状態でサーバ(ローカルなら`localhost:8080`)を叩いて、以下のWordPressの画面が出てくればWordPressはうまく起動している。
 
-![image.png](https://qiita-image-store.s3.ap-northeast-1.amazonaws.com/0/79744/4f0d7ba5-c806-f2bb-278b-2cde91cd0719.png)
+![image0.png](image0.png)
 
 
 その後、初期パスワードなどを設定して、ログインまで行ければデータベースの接続までうまくいっている。
@@ -248,7 +247,7 @@ volumes:
 
 この状態で`docker-compose up -p wp`して、正しく起動することを確認したら、あとは環境変数とか設定とか適宜設定しなおせば良いと思う。
 
-# まとめ
+## まとめ
 
 WordPressの立ち上げにはデータベースが必要で、二つのコンテナイメージを使うため、docker-composeを使う、というのは定番っぽいが、Docker初心者がいきなりdocker-composeを叩くと、WordPressは立ち上がるんだけど「Error establishing a database connection」という無情なメッセージが出て困る、というのがよくあるパターンだ。
 
@@ -260,7 +259,7 @@ WordPressの立ち上げにはデータベースが必要で、二つのコン�
 
 と順を追って作業したほうが良いと思う。
 
-# 参考
+## 参考
 
 * [Docker で Volume 名を変更する](https://qiita.com/hoto17296/items/d2f7f63c529fae276f8c)
 * [Dockerでユーザーをdockerグループに追加することの危険性を理解しよう](https://qiita.com/matyapiro31/items/3e6398ce737e2cdb5a22)
