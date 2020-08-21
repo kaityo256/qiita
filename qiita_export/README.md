@@ -42,7 +42,11 @@ APIをたたくと、結果はJSONで返ってきます。そのまま使って�
 
 ## 使い方
 
-まず、Qiitaのアクセストークンを取得します。[Qiitaの設定のアプリケーション](https://qiita.com/settings/applications)の「個人用アクセストークン」のところで「新しくトークンを発行する」をクリックします。読み込みしかしないので、スコープはread_qiitaだけで良いです。発行したトークンは、その場でしか閲覧できないのでどこかに保存しておきましょう。
+まず、Qiitaのアクセストークンを取得します。[Qiitaの設定のアプリケーション](https://qiita.com/settings/applications)の「個人用アクセストークン」のところで「新しくトークンを発行する」をクリックします。読み込みしかしないので、スコープはread_qiitaだけで良いです。
+
+![image0.png](image0.png)
+
+発行したトークンは、発行時の一度しか閲覧できない(再閲覧できない)のでどこかに保存しておきましょう。
 
 次に、環境変数を設定します。Qiitaのユーザ名と、先程取得したアクセストークンを、それぞれ`QIITA_USER`と`QIITA_TOKEN`という名前の環境変数に設定します。
 
@@ -112,21 +116,21 @@ syncスクリプトは、記事タイトルとディレクトリ対応を見て�
 
 MarkdownのQiita方言とGitHub方言(GitHub Flavored Markdown)はやや違います。それらを完全に吸収するわけではないのですが、少しだけ変換して保存します。
 
-### 見出しの変換
+## 見出しの変換
 
 Qiitaでは
 
 ```md
-# 節1
+## 節1
 ...
-# 節2
+## 節2
 ...
 ```
 
 のように、レベル1の見出しを並べるのが一般的だと思います(多分)。しかしこのままでは、markdownlintが怒るのと、記事のタイトルを入れたいので、
 
 ```md
-# タイトル
+## タイトル
 ...
 ## 節1
 ...
@@ -136,25 +140,21 @@ Qiitaでは
 
 のように、レベル1でタイトル、残りは一個ずつレベルを下げます。
 
-### コードブロック
+## コードブロック
 
 Qiitaでは、コードブロックにファイル名を含めることができます。
 
-````md
-```ruby:test.rb
-puts "Hello"
-```
-````
+```ruby
+    puts "Hello"
+    ```
 
 しかし、GitHub Flavored Markdownではファイル名を入れられません。なので、以下の用にファイル名は削除しています。
 
-````md
-```ruby
-puts "Hello"
-```
-````
+    ```ruby
+    puts "Hello"
+    ```
 
-### 画像の変換
+## 画像の変換
 
 Qiitaでは、アップロードされた画像は`amazonaws.com`に保存されますが、その際に
 
@@ -170,7 +170,7 @@ Qiitaでは、アップロードされた画像は`amazonaws.com`に保存され
 
 のようにimgタグを使う場合があります。imgタグの場合にはサイズが指定されているので、それを保存するか迷ったのですが、ここではどちらもファイルをローカルにダウンロードしてMarkdown形式で保存しています。この際、`image1.png`のように、`image`+連番のファイル名で保存します。
 
-### 数式の変換
+## 数式の変換
 
 数式は、`math`で指定されたものを`$$`に変換します。さらに`\begin{align}`を`\begin{aligned}`に変換します。GitHubでは、そのままでは数式は見えませんが、VSCodeのプレビューでは見えるので気にしないことにします(必要があればpandocとかで変換すれば良いし……)。
 
@@ -179,7 +179,7 @@ Qiitaでは、アップロードされた画像は`amazonaws.com`に保存され
 ローカルに`qiita.yaml`という形で全データが入っているので、それを使っていろいろできます。例えば、[このリポジトリ](https://github.com/kaityo256/qiita)では、記事一覧を作るために以下のようなスクリプトを使っています。
 
 ```rb
-# frozen_string_literal: true
+## frozen_string_literal: true
 
 require "yaml"
 require "open-uri"
@@ -225,4 +225,4 @@ Qiitaの記事をGitHub用にエクスポートするスクリプトを作って
 
 RubyでQiita APIをたたくのに、以下の記事を参照しました。
 
-[Qiita API v2 で記事取得する (Ruby)](https://qiita.com/koshilife/items/0f50a6aaf4c87ca2021d)
+* [Qiita API v2 で記事取得する (Ruby)](https://qiita.com/koshilife/items/0f50a6aaf4c87ca2021d)
