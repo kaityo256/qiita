@@ -5,7 +5,7 @@ WindowsのVSCodeで__m256d型のインデックスアクセスにenumを使う�
 Dockerファイルがビルドできなかったのでコンパイラをいじめる: docker_memory
 分子動力学法で一瞬文字が浮かび上がるアニメーションを作る:
 Fashion-MNISTのデータを仕分けしてPNGファイルで保存:
-見たら「ん？」となるエラーバーのグラフ:
+見たら「ん？」となるエラーバーのグラフ: error_bar
 WindowsのVSCodeでclang-formatが効かない時の確認と対処: clang-format
 線分の交差判定と交点特定:
 Rubocopに怒られないように0埋めした桁揃え文字列を作る:
