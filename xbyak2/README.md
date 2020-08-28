@@ -195,7 +195,86 @@ int main() {
 }
 ```
 
-こういうことができるのは、コンパイラがコンパイル時にグローバル変数のアドレスがわかるからだが、Xbyakは純粋にC++の関数として実装されているため、こういう「ズル」はできない。したがって、xmmレジスタに値を代入したければ、スタック上にデータを作ってから`mov`するしかない。
+こういうことができるのは、コンパイラがコンパイル時にグローバル変数のアドレスがわかるからだが、Xbyakは純粋にC++の関数として実装されているため、こういう「ズル」はできない。したがって、xmmレジスタに値を代入したければ、スタック上にデータを作ってから`movsd`するしかない。スタックをいじるからには、スタックポインタだのベースポインタだのを考える必要がある。あまり自信がないが、こんな感じになるだろうか。
+
+```cpp
+#include <cstdio>
+#include <xbyak/xbyak.h>
+
+struct Code : Xbyak::CodeGenerator {
+  Code() {
+    push(rbp);
+    mov(rbp, rsp);
+    sub(rsp, 0x8);
+    mov(rax, 0x400921fafc8b007a);
+    mov(ptr[rsp], rax);
+    movsd(xmm0, ptr[rsp]);
+    mov(rsp, rbp);
+    pop(rbp);
+    ret();
+  }
+};
+
+int main() {
+  Code c;
+  auto f = c.getCode<double (*)()>();
+  printf("%f\n", f());
+}
+```
+
+倍精度実数の`3.141592`は、バイト列で表すと`0x400921fafc8b007a`だ。これを`rax`に突っ込んで、それをスタックにコピー、そのアドレスを`xmm0`にコピーすることで`xmm0 = 3.141592`を実現している。
+
+さすがに実数のバイト列をいちいち計算するのは面倒なので、こんな補助関数を作るんですかね？
+
+```cpp
+uint64_t double_byte(double x) {
+  unsigned char *b = (unsigned char *)(&x);
+  uint64_t v = 0;
+  for (int i = 0; i < 8; i++) {
+    v <<= 8;
+    v += b[7 - i];
+  }
+  return v;
+}
+```
+
+これを使うと、さっきのコードはこんな感じになります。
+
+```cpp
+#include <cstdint>
+#include <cstdio>
+#include <xbyak/xbyak.h>
+
+struct Code : Xbyak::CodeGenerator {
+  uint64_t double_byte(double x) {
+    unsigned char *b = (unsigned char *)(&x);
+    uint64_t v = 0;
+    for (int i = 0; i < 8; i++) {
+      v <<= 8;
+      v += b[7 - i];
+    }
+    return v;
+  }
+  Code() {
+    push(rbp);
+    mov(rbp, rsp);
+    sub(rsp, 0x8);
+    //mov(rax, 0x400921fafc8b007a);
+    mov(rax, double_byte(3.141592));
+    mov(ptr[rsp], rax);
+    movsd(xmm0, ptr[rsp]);
+    mov(rsp, rbp);
+    pop(rbp);
+    ret();
+  }
+};
+
+int main() {
+  Code c;
+  auto f = c.getCode<double (*)()>();
+  printf("%f\n", f());
+}
+```
 
 
 ## 関数のシグネチャについて
