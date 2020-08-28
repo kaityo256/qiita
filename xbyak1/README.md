@@ -1,5 +1,9 @@
 # JITアセンブラXbyakを使ってみる（その１）
 
+
+* [その１：Xbyakの概要](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)←イマココ
+* [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
+
 ## はじめに
 
 [Xbyak](https://github.com/herumi/xbyak)(カイビャック)は、[光成滋生](https://github.com/herumi)さんによるJITアセンブラです。Intelによる深層学習ライブラリ[oneDNN](https://github.com/oneapi-src/oneDNN)のエンジン部分の実装に使われたり、AArch64版のXbyakである[Xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64)が富士通のリポジトリとして公開されたりと、ベンダーによる公式採用が増えています。なんかすごそうなので使ってみましょう、という記事です。
@@ -272,4 +276,4 @@ $1 = (int (*)(void)) 0x7fffff7e0000
 
 簡単にXbyakの使い方を説明してみました。Xbyakではアセンブリと一対一対応した関数を呼び出すことで関数を「作る」ことができます。なので、インラインアセンブリや組み込み関数でコードを書いたことがある人はすぐに使えるようになりますが、XbyakはJITアセンブラなので、インラインアセンブリや組み込み関数とはかなり異なるコーディング感覚になります。
 
-(続く？)
+[続く](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)

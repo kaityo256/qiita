@@ -277,3 +277,4 @@ clang++でrandom_shuffleの乱数生成器にrand()を使った時の問題点:
 Qiitaに投稿した記事をGitHub用にエクスポートする: qiita_export
 JITアセンブラXbyakを使ってみる（その１）: xbyak1
 CentOSでmatplotlibが「いまAggを使ってるからfigureを出せないよ」と怒られた時の対応: 
+JITアセンブラXbyakを使ってみる（その２）: xbyak2
