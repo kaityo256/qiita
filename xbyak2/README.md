@@ -276,5 +276,179 @@ int main() {
 }
 ```
 
+結果は同じです。
 
-## 関数のシグネチャについて
+## 関数の返り値の決め方
+
+Xbyakでは、関数の引数や返り値は`GetCode::CodeGenerator`のテンプレート引数として決まります。なので、同じ関数を異なる引数を持つ関数として使うことができます。
+
+
+```cpp
+#include <cstdint>
+#include <cstdio>
+#include <xbyak/xbyak.h>
+
+struct Code : Xbyak::CodeGenerator {
+  uint64_t double_byte(double x) {
+    unsigned char *b = (unsigned char *)(&x);
+    uint64_t v = 0;
+    for (int i = 0; i < 8; i++) {
+      v <<= 8;
+      v += b[7 - i];
+    }
+    return v;
+  }
+  Code() {
+    push(rbp);
+    mov(rbp, rsp);
+    sub(rsp, 0x8);
+    mov(rax, double_byte(4.56));
+    mov(ptr[rsp], rax);
+    movsd(xmm0, ptr[rsp]);
+    mov(eax, 123);
+    mov(rsp, rbp);
+    pop(rbp);
+    ret();
+  }
+};
+
+int main() {
+  Code c;
+  auto f1 = c.getCode<int (*)()>();
+  auto f2 = c.getCode<double (*)()>();
+  printf("f1() = %d\n", f1());
+  printf("f2() = %f\n", f2());
+}
+```
+
+`f1`と`f2`は、`Code`の同じインスタンス`c`から作られていますが、片方は返り値を`int`、もう片方は`double`と定義されています。関数の中身で`eax`に123を、`xmm0`に`4.56`を代入しているので、`getCode`のテンプレート引数によりどちらが返り値として使われるかが変わります。
+
+```sh
+$ g++ rvalue.cpp
+$ ./a.out
+f1() = 123
+f2() = 4.560000
+```
+
+「だからどうした」と言われると困るのですが、組み込み関数だのインラインアセンブラだのを使ってきた人間からすると、「関数のシグネチャすら動的に決まる」というのに驚いたので書いてみました。
+
+## レジスタの中身の確認
+
+SIMD化をしていると、「いまこの瞬間のレジスタの中身」が知りたいことが良くあります。AVX2で普通にSIMD化するなら`__m256d`型の変数を使うでしょうが、これは配列のようにインデックスアクセスができるので、print文デバッグが容易です。
+
+個人的にはこんな関数でymmレジスタの中身を表示させています。
+
+```cpp
+void print_m256d(__m256d v) {
+  printf("%f %f %f %f\n", v[3], v[2], v[1], v[0]);
+}
+```
+
+こんな風に使います。
+
+```cpp
+#include <cstdio>
+#include <x86intrin.h>
+
+void print_m256d(__m256d v) {
+  printf("%f %f %f %f\n", v[3], v[2], v[1], v[0]);
+}
+
+int main() {
+  __m256d v = _mm256_set_pd(4.0, 3.0, 2.0, 1.0);
+  print_m256d(v);
+}
+```
+
+```sh
+$ g++ -march=native register.cpp
+$ ./a.out
+4.000000 3.000000 2.000000 1.000000
+```
+
+さて、Xbyakでは、作ろうとしている関数のレジスタの値を、作っている関数(Xbyak::CodeGeneratorを継承したクラスのコンストラクタ)の中のローカル変数に取り出すことができません。また、Xbyakから`printf`をcallできないので(多分)、ymmの中身を直接浮動小数点数として表示することは困難です。
+
+なので、Xbyakからymmレジスタの中身をソース上からprint文デバッグしたければ、
+
+* 関数の返り値にして一つ一つ確認する
+* 関数の引数に配列を渡して、そいつに値を代入して、後から確認する
+
+のどちらかになろうかと思います(デバッガ使え、という話もありますが・・・)。
+
+後者で、たとえば`ymm0`の値を見たい時、関数の引数として`double [4]`を渡して、そいつに値を代入することで後で中身を確認するようなコードはこんな感じになるんですかね。
+
+```cpp
+#include <cstdio>
+#include <x86intrin.h>
+#include <xbyak/xbyak.h>
+
+struct Code : Xbyak::CodeGenerator {
+  Code() {
+    vmovups(ptr[rdi], xmm0);
+    vextractf128(xmm0, ymm0, 0x1);
+    vmovups(ptr[rdi + 16], xmm0);
+    ret();
+  }
+};
+
+int main() {
+  double x[4] = {};
+  __m256d v = _mm256_set_pd(4.0, 3.0, 2.0, 1.0);
+  Code c;
+  auto f = c.getCode<void (*)(__m256d, double *)>();
+  f(v, x);
+  printf("%f %f %f %f\n", x[3], x[2], x[1], x[0]);
+}
+```
+
+これは引数として`__m256d`、つまりYMMレジスタを受け取り、その中身を第二引数に渡した`double`の配列にバラしてもらう関数です。
+
+コンパイル、実行してみましょう。
+
+```sh
+$ g++ -march=native show_ymm.cpp
+$ ./a.out
+4.000000 3.000000 2.000000 1.000000
+```
+
+できてそうですね。せっかくなので`vpermpd`を使って`ymm0`の中身をひっくり返してみましょうか。
+
+```cpp
+#include <cstdio>
+#include <x86intrin.h>
+#include <xbyak/xbyak.h>
+
+struct Code : Xbyak::CodeGenerator {
+  Code() {
+    vpermpd(ymm0, ymm0, 0 * 64 + 1 * 16 + 2 * 4 + 3 * 1);
+    vmovups(ptr[rdi], xmm0);
+    vextractf128(xmm0, ymm0, 0x1);
+    vmovups(ptr[rdi + 16], xmm0);
+    ret();
+  }
+};
+
+int main() {
+  double x[4] = {};
+  __m256d v = _mm256_set_pd(4.0, 3.0, 2.0, 1.0);
+  Code c;
+  auto f = c.getCode<void (*)(__m256d, double *)>();
+  f(v, x);
+  printf("%f %f %f %f\n", x[3], x[2], x[1], x[0]);
+}
+```
+
+```sh
+$ g++ -march=native show_ymm2.cpp
+$ ./a.out
+1.000000 2.000000 3.000000 4.000000
+```
+
+ちゃんとひっくり返りました。できているようです。
+
+## まとめ
+
+Xbyakの説明というよりは、ほぼアセンブリの説明になってしまいました。それなりにSIMD化とかしてアセンブリを見ていたつもりでしたが、Xbyakを使ってみて、自分が全然アセンブリを知らないことがわかりました。WindowsとLinuxで呼び出し規約が違うなんて知らなかったよ。
+
+組み込み関数を使ってた時には普通にprint文デバッグをしていたのですが、Xbyakからはprintfが(多分)呼べないので、関数の引数経由でモニターするか、デバッガから読むしかなさそうです。これ、わりとしんどいと思うんですが、世の中のXbyakerの方々はどうやってデバッグしてるんでしょうか？
+
