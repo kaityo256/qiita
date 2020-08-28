@@ -71,4 +71,36 @@ int main() {
 
 ここで注意したいのは、コードを生成する関数(コンストラクタ)と、生成する関数のシグネチャは全く関係がないことだ。あくまで生成する関数のシグネチャは、`getCode`のテンプレート引数で決まる。
 
+一応gdbで動作確認をしておこう。`-g`つきでコンパイルして、gdbで実行し、`printf`のところにブレークポイントを置く。
+
+```sh
+$ g++ -g add_int.cpp
+$ gdb ./a.out
+(gdb) b 15
+Breakpoint 1 at 0x1a7a: file add_int.cpp, line 15.
+(gdb) r
+Starting program: /mnt/c/Users/watanabe/Desktop/github/qiita/xbyak2/a.out
+
+Breakpoint 1, main () at add_int.cpp:15
+15        printf("%d\n", f(1, 2));
+```
+
+この状態で`layout asm`してアセンブリを見る。
+
+![add_int1.png](add_int1.png)
+
+`callq *%rax`がXbyakが作った関数の呼び出しだ。その直前で、`edi`に1が、`esi`に2が入っていることがわかる。これが`f(1, 2)`の部分だ。ここから`si`を何度か入力して、Xbyakの作った関数に入ろう。
+
+![add_int2.png](add_int2.png)
+
+```nasm
+mov %edi, %eax
+add %esi, %eax
+retq
+```
+
+と、そのままのアセンブリになっており、`eax`に`edi`と`esi`の和が入っていることがわかる。`eax`が関数`f`の返り値として扱われるので、その後の`printf`では「3」と表示される。
+
+一応実数の和も試しておこう。引数は
+
 ## 関数のシグネチャについて
