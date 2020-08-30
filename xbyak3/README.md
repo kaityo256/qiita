@@ -78,9 +78,9 @@ alias vi=vim
 
 コンパイラのコマンドが長いので`ag++`と別名を与えています。また、ライブラリのパスとかが面倒なので静的リンクしてしまっています(`-static`)。SVE命令を有効にするためのオプション`-march=armv8-a+sve -O2`もつけています。
 
-## SVEの確認
+## 環境の確認
 
-### クロスコンパイルの確認
+### クロスコンパイル
 
 まずはAArch64向けにクロスコンパイルできることを確認しましょう。適当なファイルを作ってコンパイルします。
 
@@ -112,7 +112,7 @@ Hello AAarch64!
 
 無事に実行できました。
 
-### SVEの確認
+### SVE
 
 次に、SVE命令が実行できるか確認してみましょう。こんなコードを書きます。
 
@@ -125,7 +125,18 @@ int main(){
 }
 ```
 
-GCCは新しいバージョンではSVEの組み込み関数に対応しており、`arm_sve.h`をインクルードすることで使えるようになります。SVE命令は、頭に「sv」というプレフィックスがついています。`svcntd`は、ハードウェアに実装されているSIMDレジスタに、倍精度実数が何個入るかを返す関数で、おそらくcntはcount、dはdoubleのことだと思われます。実行してみましょう。
+GCCは新しいバージョンではSVEの組み込み関数に対応しており、`arm_sve.h`をインクルードすることで使えるようになります。SVE命令の組み込み関数、頭に「sv」というプレフィックスがついています。対応するニーモニックは`cntd`です。`cntd`は、ハードウェアに実装されているSIMDレジスタに、倍精度実数が何個入るかを返す関数で、おそらくcntはcount、dはdoubleのことだと思われます。これをコンパイルしてみましょう。
+
+```sh
+$ aarch64-linux-gnu-g++ -static sve.cpp
+sve.cpp: In function 'int main()':
+sve.cpp:5:26: error: ACLE function 'long unsigned int svcntd()' requires ISA extension 'sve'
+    5 |     printf("%d\n",svcntd());
+      |                          ^
+sve.cpp:5:26: note: you can enable 'sve' using the command-line option '-march', or by using the 'target' attribute or pragma
+```
+
+そのままではSVE命令は使えないよ、と怒られます。SVE命令を使ったコードをコンパイルするためには、`-march=armv8-a+sve`と、アーキテクチャを指定してやる必要があります。もともとクロスコンパイラの名前が長い上に、いちいちこんな長いオプションをつけるのは鬱陶しいので、先ほど作ったalias「ag++」を使いましょう。
 
 ```sh
 $ ag++ sve.cpp
@@ -133,11 +144,13 @@ $ qemu-aarch64 ./a.out
 8
 ```
 
-64ビットである倍精度実数は8個入る、つまりSIMDレジスタが512ビットであることがわかります。
+無事にコンパイル、実行できました。64ビットである倍精度実数は8個入る、つまりSIMDレジスタが512ビットであることがわかります。
 
 ## Xbyak_aarch64
 
+### Xbyakの動作確認
 
+では、いよいよXbyak_aarch64を使ってみましょう。git submoduleとして使います。注意点としては、本記事執筆時点(2020年8月30日)では、[fujitsu/xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64)のデフォルトブランチが`fjdev`になっており、うまくコンパイルできません。`master`を指定してsubmodule addしましょう。
 
 ```sh
 mkdir xbyak_test
@@ -147,3 +160,124 @@ git submodule add -b master https://github.com/fujitsu/xbyak_aarch64.git
 export CPLUS_INCLUDE_PATH=xbyak_aarch64
 ```
 
+最後に`CPLUS_INCLUDE_PATH`にxbyak_aarch64の場所を教えてやればXbyak_aarch64が使えるようになります。試してみましょう。
+
+まずは単に1を返す関数です。AArch64の汎用レジスタは`x0`,`x1`, ... , `x30`です。これらは64ビットですが、`w0`, `w1`, ..., `w30`としてアクセスすると32ビットレジスタとしてアクセスすることができます。32ビットレジスタとして読みだすと、上位32ビットは0クリアされます。
+
+関数の整数の返り値は`x0/w0`に入れます。なので、
+
+```cpp
+int func(){
+  return 1;
+}
+
+を実装するには、`w0`に1を代入してやるだけです。
+
+```cpp
+#include <cstdio>
+#include <xbyak_aarch64/xbyak_aarch64.h>
+
+struct Code : Xbyak::CodeGenerator{
+  Code (){
+    mov(w0, 1);
+    ret();
+  }
+};
+
+int main(){
+  Code c;
+  auto f = c.getCode<int (*)()>();
+  printf("%d\n",f());
+}
+```
+
+コンパイル、実行してみましょう。
+
+```sh
+$ ag++ test.cpp
+$ qemu-aarch64 ./a.out
+1
+```
+
+問題なく実行できました。
+
+次に、足し算をしてみましょう。AArch64では、整数の引数は`w0`, `w1`, ...と順番に入れられてくるため
+
+```cpp
+int func(int a, int b){
+  return a+b;
+}
+```
+
+を実行するためには、単に`w0`と`w1`の和を`w0`に入れてやればOKです。
+
+```cpp
+#include <cstdio>
+#include <xbyak_aarch64/xbyak_aarch64.h>
+
+struct Code : Xbyak::CodeGenerator{
+  Code (){
+    add(w0, w1, w0);
+    ret();
+  }
+};
+
+int main(){
+  Code c;
+  auto f = c.getCode<int (*)(int, int)>();
+  printf("%d\n",f(3, 4));
+}
+```
+
+これは[公式サンプル](https://github.com/fujitsu/xbyak_aarch64)を修正したもので、3+4を計算するものです。実行してみましょう。
+
+```sh
+$ ag++ test.cpp
+$ qemu-aarch64 ./a.out
+7
+```
+
+できたみたいですね。
+
+## XbyakからSVEを使ってみる
+
+ではSVE命令を使ってみましょう。まずは`cntd`です。こいつは返り値を好きな汎用レジスタに返すことができます。なので`x0`に入れてやれば、そのまま関数の返り値になります。
+
+```cpp
+#include <cstdio>
+#include <xbyak_aarch64/xbyak_aarch64.h>
+
+struct Code : Xbyak::CodeGenerator{
+  Code (){
+    cntd(x0);
+    ret();
+  }
+};
+
+int main(){
+  Code c;
+  auto f = c.getCode<int (*)()>();
+  printf("%d\n",f());
+}
+```
+
+実行してみましょう。
+
+```sh
+$ ag++ cntd.cpp
+$ qemu-aarch64 ./a.out
+8
+```
+
+できたみたいですね。
+
+## まとめ
+
+Dockerを使って64ビットARMであるAArch64の開発環境を整えて、Xbyak_aarch64の動作確認までしてみました。ハマりポイントとしては
+
+* AArch64向けのクロスコンパイラGCCのGCC10以上が欲しいが、パッケージで簡単に入るのが(僕が知る限り)ArchLinuxしかない
+* fujitsu/Xbyak_aarch64のデフォルトブランチが`fjdev`になっており、なんか動作がおかしいので、`master`を明示的に指定してやる必要がある
+
+くらいでしょうか。
+
+ただ動作確認しただけで、SVEを使った本格的なSIMD化やJITが効くようなコードの確認まではできませんでした。そのうち[できたらやります](https://dic.nicovideo.jp/a/%E8%A1%8C%E3%81%91%E3%81%9F%E3%82%89%E8%A1%8C%E3%81%8F%E3%82%8F)。
