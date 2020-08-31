@@ -13,6 +13,10 @@ struct Code : Xbyak::CodeGenerator {
     mov(rbx, (size_t)b);
     mov(rcx, (size_t)c);
     mov(rdx, (size_t)d);
+    movapd(ymm0, ptr[rax]);
+    movapd(ymm1, ptr[rbx]);
+    movapd(ymm2, ptr[rcx]);
+    movapd(ymm3, ptr[rdx]);
     ret();
   }
 };
