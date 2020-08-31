@@ -209,3 +209,83 @@ Hello
 
 ## SIMDレジスタの表示
 
+さて、数値計算屋としての本命です。なんかYMMレジスタをいじった時、その中身を知りたいとしましょう。例えば
+
+```cpp
+double a[] = {1.0, 2.0, 3.0, 4.0};
+```
+
+という配列があり、これを`vmovapd`でYMMレジスタにロードした時、レジスタに期待通り(4.0, 3.0, 2.0, 1.0)が入っているかどうか見たいとします。組み込み関数を使うならこんな感じのコードになるでしょう。
+
+```cpp
+#include <cstdio>
+#include <x86intrin.h>
+
+void print_m256d(__m256d v) {
+  printf("%f %f %f %f\n", v[3], v[2], v[1], v[0]);
+}
+
+double a[] = {1.0, 2.0, 3.0, 4.0};
+int main() {
+  __m256d va = _mm256_load_pd(a);
+  print_m256d(va);
+}
+```
+
+実行するとこんな感じになります。
+
+```sh
+$ g++ -march=native ymm.cpp
+$ ./a.out
+4.000000 3.000000 2.000000 1.000000
+```
+
+レジスタの下位を右に書いているので、C++の配列の順番とは逆になることに注意してください。これをXbyakを使って書いてみましょう。
+
+```cpp
+#include <cstdio>
+#include <x86intrin.h>
+#include <xbyak/xbyak.h>
+
+void print_m256d(__m256d v) {
+  printf("%f %f %f %f\n", v[3], v[2], v[1], v[0]);
+}
+
+double a[] = {1.0, 2.0, 3.0, 4.0};
+
+struct Code : Xbyak::CodeGenerator {
+  Code() {
+    mov(rax, (size_t)a);
+    vmovapd(ymm0, ptr[rax]);
+    mov(rbx, (size_t)print_m256d);
+    call(rbx);
+    ret();
+  }
+};
+
+int main() {
+  Code c;
+  auto f = c.getCode<void (*)()>();
+  f();
+}
+```
+
+Xbyakのコードの中身はこんな感じです。
+
+```cpp
+    mov(rax, (size_t)a); // グローバル変数aのアドレスをraxに代入
+    vmovapd(ymm0, ptr[rax]); // raxの指すアドレスからymmにvmovpadで値をロード
+    mov(rbx, (size_t)print_m256d); // rbxにprint_m256の関数のアドレスを代入
+    call(rbx); // rbx経由でprint_m256dをcall
+```
+
+`__m256d`とかがからんだ呼び出し規約を良く知りませんが(←調べろよ)、たぶん`ymm0`、`ymm1`と順番に入れるのでしょう。print_m256dは第一引数に`ymm0`を期待しているため、`ymm0`に`vmovapd`した後にそのまま`print_m256d`を`call`すれば、`ymm0`の中身が表示されるはずです。コンパイル、実行してみましょう。
+
+```sh
+$ g++ -march=natvie ymm_xbyak.cpp
+$ ./a.out
+4.000000 3.000000 2.000000 1.000000
+```
+
+できてそうですね。
+
