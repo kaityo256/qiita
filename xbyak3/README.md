@@ -84,7 +84,7 @@ alias vi=vim
 
 ## 環境の確認
 
-### クロスコンパイル
+## クロスコンパイル
 
 まずはAArch64向けにクロスコンパイルできることを確認しましょう。適当なファイルを作ってコンパイルします。
 
@@ -116,7 +116,7 @@ Hello AAarch64!
 
 無事に実行できました。
 
-### SVE
+## SVE
 
 次に、SVE命令が実行できるか確認してみましょう。こんなコードを書きます。
 
@@ -152,9 +152,9 @@ $ qemu-aarch64 ./a.out
 
 ## Xbyak_aarch64
 
-### Xbyakの動作確認
+## Xbyakの動作確認
 
-では、いよいよXbyak_aarch64を使ってみましょう。git submoduleとして使います。注意点としては、本記事執筆時点(2020年8月30日)では、[fujitsu/xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64)のデフォルトブランチが`fjdev`になっており、うまくコンパイルできません。`master`を指定してsubmodule addしましょう。
+では、いよいよXbyak_aarch64を使ってみましょう。git submoduleとして使います。注意点としては、本記事執筆時点(2020年8月30日)では、[fujitsu/xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64)のデフォルトブランチが`fjdev`になっており、そのままではうまくコンパイルできません。`master`を指定してsubmodule addしましょう。
 
 ```sh
 mkdir xbyak_test
@@ -174,6 +174,7 @@ export CPLUS_INCLUDE_PATH=xbyak_aarch64
 int func(){
   return 1;
 }
+```
 
 を実装するには、`w0`に1を代入してやるだけです。
 
