@@ -13,32 +13,25 @@ struct Code : Xbyak::CodeGenerator {
     mov(rbx, (size_t)b);
     mov(rcx, (size_t)c);
     mov(rdx, (size_t)d);
-    movapd(ymm0, ptr[rax]);
-    movapd(ymm1, ptr[rbx]);
-    movapd(ymm2, ptr[rcx]);
-    movapd(ymm3, ptr[rdx]);
+    vmovapd(ymm0, ptr[rax]);
+    vmovapd(ymm1, ptr[rbx]);
+    vmovapd(ymm2, ptr[rcx]);
+    vmovapd(ymm3, ptr[rdx]);
+    vunpcklpd(ymm4, ymm0, ymm1);
+    vunpckhpd(ymm5, ymm0, ymm1);
+    vunpcklpd(ymm6, ymm2, ymm3);
+    vunpckhpd(ymm7, ymm2, ymm3);
+    vperm2f128(ymm0, ymm4, ymm6, 2 * 16 + 0 * 1);
+    vperm2f128(ymm1, ymm5, ymm7, 2 * 16 + 0 * 1);
+    vperm2f128(ymm2, ymm4, ymm6, 3 * 16 + 1 * 1);
+    vperm2f128(ymm3, ymm5, ymm7, 3 * 16 + 1 * 1);
+    vmovapd(ptr[rax], ymm0);
+    vmovapd(ptr[rbx], ymm1);
+    vmovapd(ptr[rcx], ymm2);
+    vmovapd(ptr[rdx], ymm3);
     ret();
   }
 };
-
-void transpose(void) {
-  __m256d va = _mm256_load_pd(a);
-  __m256d vb = _mm256_load_pd(b);
-  __m256d vc = _mm256_load_pd(c);
-  __m256d vd = _mm256_load_pd(d);
-  __m256d tmp0 = _mm256_unpacklo_pd(va, vb);
-  __m256d tmp1 = _mm256_unpackhi_pd(va, vb);
-  __m256d tmp2 = _mm256_unpacklo_pd(vc, vd);
-  __m256d tmp3 = _mm256_unpackhi_pd(vc, vd);
-  __m256d r0 = _mm256_permute2f128_pd(tmp0, tmp2, 2 * 16 + 1 * 0);
-  __m256d r1 = _mm256_permute2f128_pd(tmp1, tmp3, 2 * 16 + 1 * 0);
-  __m256d r2 = _mm256_permute2f128_pd(tmp0, tmp2, 3 * 16 + 1 * 1);
-  __m256d r3 = _mm256_permute2f128_pd(tmp1, tmp3, 3 * 16 + 1 * 1);
-  _mm256_store_pd(a, r0);
-  _mm256_store_pd(b, r1);
-  _mm256_store_pd(c, r2);
-  _mm256_store_pd(d, r3);
-}
 
 void show(void) {
   printf("%f %f %f %f\n", a[0], a[1], a[2], a[3]);
