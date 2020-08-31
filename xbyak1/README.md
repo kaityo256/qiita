@@ -3,6 +3,7 @@
 
 * [その１：Xbyakの概要](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)←イマココ
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
+* [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)
 
 ## はじめに
 
