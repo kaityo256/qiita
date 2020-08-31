@@ -2,8 +2,8 @@
 
 * [その１：Xbyakの概要](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
-* その３：AAarch64向けの環境構築
-* その４：Xbyakからの関数呼び出し←イマココ
+* [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)
+* [その４：Xbyakからの関数呼び出し](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)←イマココ
 
 ## はじめに
 
@@ -11,7 +11,7 @@
 
 ## 関数呼び出し
 
-### インラインアセンブラ
+## インラインアセンブラ
 
 C++でインラインアセンブラや組み込み関数を使っている場合には、関数呼び出しについて考える必要はありません。そのままC++の枠組みで関数を呼べばよいからです。しかし、Xbyakから関数を呼ぶのはちょっとだけ注意が必要です。
 
@@ -27,7 +27,7 @@ int add_one(int i){
 
 これを(無意味ですが)インラインアセンブラから呼ぶのは、こんな感じになるでしょうか。
 
-```cpp:call.pp
+```cpp
 #include <cstdio>
 #include <xbyak/xbyak.h>
 
@@ -58,7 +58,7 @@ $ ./a.out
 
 さて、コンパイルされてしまったコードはラベルは消えてアドレスになってしまうため、Xbyakから参照できません(多分)。なので、関数のアドレスをレジスタに突っ込んで、間接的に`call`することを考えます。これも無理やりインラインアセンブラで書くならこんな感じでしょうか。
 
-```cpp:call2.cpp
+```cpp
 #include <cstdio>
 #include <xbyak/xbyak.h>
 
@@ -91,11 +91,11 @@ $ ./a.out
 
 できてそうですね。
 
-### Xbyakからの呼び出し
+## Xbyakからの呼び出し
 
 この二番目の方法、つまり関数のアドレスを`rax`に突っ込んで`callq *rax`する方法を、そのままXbyakで実装してみましょう。
 
-```cpp:call_xbyak.cpps
+```cpp
 #include <cstdio>
 #include <xbyak/xbyak.h>
 
@@ -124,7 +124,9 @@ int main() {
 mov(rax, (size_t)add_one);
 ```
 
-とかけます。`callq *rax`は、Xbyakでは`call(rax)`と書いて良いようです。引数を`edi`に代入するところはC++コンパイラがやってくれるので、Xbyakはそれをそのまま`add_one`に渡してやれば、結果が`eax`に返ってくるので、そのまま`ret`すれば、それが返り値になります。コンパイル、実行してみましょう。
+とかけます。`callq *rax`は、Xbyakでは`call(rax)`と書いて良いようです[^2]。引数を`edi`に代入するところはC++コンパイラがやってくれるので、Xbyakはそれをそのまま`add_one`に渡してやれば、結果が`eax`に返ってくるので、そのまま`ret`すれば、それが返り値になります。コンパイル、実行してみましょう。
+
+[^2]: 最初、64ビットのシステムなのに`rax`ではなく`eax`にアドレスを入れて`call`してSIGSEGVが出て結構長い間悩みました。WindowsのGit Bashだとなぜか32ビットモードで動作してるっぽくて、逆に`eax`を使う必要があるんですよね・・・
 
 ```sh
 $ g++ call_xbyak.cpp
@@ -134,11 +136,11 @@ $ ./a.out
 
 問題なく呼べました。
 
-### Xbyakからの関数呼び出しの注意点
+## Xbyakからの関数呼び出しの注意点
 
 私がXbyakから関数呼び出しをしたいのは、主にprintfデバッグのためです。SIMD化していると「いまこの場所でこのSIMDレジスタの中身を実数値として確認したい」ということがよくあります。そのため、Xbyakから`printf`を呼びたいわけですが、そのためにこんなコードを書いてみましょう。
 
-```cpp:call_puts.cpp
+```cpp
 #include <cstdio>
 #include <xbyak/xbyak.h>
 
@@ -170,9 +172,11 @@ $ ./a.out
 zsh: segmentation fault (core dumped)  ./a.out
 ```
 
-SIGSEGVで死にました。これが死ぬかどうかは環境に依存します。WSLのUbuntuでは死にましたが、例えばCentOSでは問題なく実行できました。仕組みはよくわかっていないのですが、おそらくこれは関数`puts`がシェアードライブラリになっており、それがロードされていないのに呼び出されたのが原因な気がします。とりあえず、Xbyakの作った関数を呼ぶ前に`puts`を呼んでおけば問題なく実行できます。
+SIGSEGVで死にました。これが死ぬかどうかは環境に依存します。WSLのUbuntuでは死にましたが、例えばCentOSでは問題なく実行できました。仕組みはよくわかっていないのですが、おそらくこれは関数`puts`がシェアードライブラリになっており、それがロードされていないのに呼び出されたのが原因な気がします[^1]。とりあえず、Xbyakの作った関数を呼ぶ前に`puts`を呼んでおけば問題なく実行できます。
 
-```cpp:call_puts2.cpp
+[^1]: これ、最初は[ASLR](https://ja.wikipedia.org/wiki/%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E7%A9%BA%E9%96%93%E9%85%8D%E7%BD%AE%E3%81%AE%E3%83%A9%E3%83%B3%E3%83%80%E3%83%A0%E5%8C%96)のせいだと思ってずっと調べてて数時間溶けました。
+
+```cpp
 #include <cstdio>
 #include <xbyak/xbyak.h>
 
@@ -217,7 +221,7 @@ double a[] = {1.0, 2.0, 3.0, 4.0};
 
 という配列があり、これを`vmovapd`でYMMレジスタにロードした時、レジスタに期待通り(4.0, 3.0, 2.0, 1.0)が入っているかどうか見たいとします。組み込み関数を使うならこんな感じのコードになるでしょう。
 
-```cpp:ymm.cpp
+```cpp
 #include <cstdio>
 #include <x86intrin.h>
 
@@ -242,7 +246,7 @@ $ ./a.out
 
 レジスタの下位を右に書いているので、C++の配列の順番とは逆になることに注意してください。これをXbyakを使って書いてみましょう。
 
-```cpp:ymm_xbyak.cpp
+```cpp
 #include <cstdio>
 #include <x86intrin.h>
 #include <xbyak/xbyak.h>
@@ -289,11 +293,11 @@ $ ./a.out
 
 できてそうですね。
 
-## レジスタの転置
+## レジスタの転置のデバッグ
 
 次はSIMD化屋さんはみんな大好き、レジスタの転置です。YMMレジスタ4つの行と列を転置しましょう。組み込み関数で書くならこんな感じになるでしょうか。
 
-```cpp:transpose.cpp
+```cpp
 #include <cstdio>
 #include <x86intrin.h>
 
@@ -360,7 +364,7 @@ After
 
 これを素直にXbyakで実装するとこうなるでしょう。
 
-```cpp:transpose_xbyak.cpp
+```cpp
 #include <cstdio>
 #include <x86intrin.h>
 #include <xbyak/xbyak.h>

@@ -4,7 +4,7 @@
 * [その１：Xbyakの概要](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)←イマココ
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
 * [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)
-
+* [その４：Xbyakからの関数呼び出し](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
 ## はじめに
 
 [Xbyak](https://github.com/herumi/xbyak)(カイビャック)は、[光成滋生](https://github.com/herumi)さんによるJITアセンブラです。Intelによる深層学習ライブラリ[oneDNN](https://github.com/oneapi-src/oneDNN)のエンジン部分の実装に使われたり、AArch64版のXbyakである[Xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64)が富士通のリポジトリとして公開されたりと、ベンダーによる公式採用が増えています。なんかすごそうなので使ってみましょう、という記事です。

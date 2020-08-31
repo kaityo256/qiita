@@ -2,7 +2,8 @@
 
 * [その１：Xbyakの概要](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
-* その３：AAarch64向けの環境構築←イマココ
+* [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)←イマココ
+* [その４：Xbyakからの関数呼び出し](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
 
 ## はじめに
 
@@ -286,3 +287,5 @@ Dockerを使って64ビットARMであるAArch64の開発環境を整えて、Xb
 くらいでしょうか。
 
 今回は環境構築と動作確認をしただけで、SVEを使った本格的なSIMD化やJITが効くようなコードの確認まではできませんでした。そのうち[できたらやります](https://dic.nicovideo.jp/a/%E8%A1%8C%E3%81%91%E3%81%9F%E3%82%89%E8%A1%8C%E3%81%8F%E3%82%8F)。
+
+[続く](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
