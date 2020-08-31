@@ -6,18 +6,22 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [JITアセンブラXbyakを使ってみる（その４）](xbyak4/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
+  * 作成：2020-09-01 01:04:10 +0900
+  * 更新：2020-09-01 01:16:05 +0900
 * [JITアセンブラXbyakを使ってみる（その３）](xbyak3/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/012f858630f32672e05d)
   * 作成：2020-08-30 11:28:09 +0900
-  * 更新：2020-08-30 13:44:35 +0900
+  * 更新：2020-09-01 01:06:37 +0900
 * [JITアセンブラXbyakを使ってみる（その２）](xbyak2/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
   * 作成：2020-08-29 01:26:38 +0900
-  * 更新：2020-08-31 18:38:38 +0900
+  * 更新：2020-09-01 01:06:54 +0900
 * [JITアセンブラXbyakを使ってみる（その１）](xbyak1/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)
   * 作成：2020-08-28 15:41:04 +0900
-  * 更新：2020-08-30 11:30:15 +0900
+  * 更新：2020-09-01 01:07:55 +0900
 * [Qiitaに投稿した記事をGitHub用にエクスポートする](qiita_export/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/cd39eb768a944dad4085)
   * 作成：2020-08-21 23:59:48 +0900
