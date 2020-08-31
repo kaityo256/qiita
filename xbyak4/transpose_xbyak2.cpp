@@ -7,6 +7,11 @@ double b[] = {1.0, 1.1, 1.2, 1.3};
 double c[] = {2.0, 2.1, 2.2, 2.3};
 double d[] = {3.0, 3.1, 3.2, 3.3};
 
+void print_m256d(__m256d v) {
+  printf("%f %f %f %f\n", v[3], v[2], v[1], v[0]);
+  exit(-1);
+}
+
 struct Code : Xbyak::CodeGenerator {
   Code() {
     mov(rax, (size_t)a);
@@ -18,6 +23,11 @@ struct Code : Xbyak::CodeGenerator {
     vmovapd(ymm2, ptr[rcx]);
     vmovapd(ymm3, ptr[rdx]);
     vunpcklpd(ymm4, ymm0, ymm1);
+
+    vmovapd(ymm0, ymm4);
+    mov(rax, (size_t)print_m256d);
+    call(rax);
+
     vunpckhpd(ymm5, ymm0, ymm1);
     vunpcklpd(ymm6, ymm2, ymm3);
     vunpckhpd(ymm7, ymm2, ymm3);
