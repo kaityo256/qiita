@@ -39,7 +39,7 @@ $$
 また、分散は平均値のまわりの二次のモーメントである。
 
 $$
-\sigma^2 = \left< (x-\bar{x}^2 \right>
+\sigma^2 = \left< (x-\bar{x})^2 \right>
 $$
 
 
@@ -67,7 +67,7 @@ $$
 
 $$
 \begin{aligned}
-M(t) &= 1 + \left<x\right>t + \left<x\right> \frac{t^2}{2!} + \cdots \\
+M(t) &= 1 + \left<x\right>t + \left<x\right> ^2 \frac{t^2}{2!} + \cdots \\
 &= \sum_{k=0} \left<x^k\right> \frac{t^k}{k!}
 \end{aligned}
 $$
@@ -203,7 +203,7 @@ $$
 したがって、分散は
 
 $$
-\left<x^2\right> - \left<x\right>^2 = \sigma2
+\left<x^2\right> - \left<x\right>^2 = \sigma^2
 $$
 
 と求まる。

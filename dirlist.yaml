@@ -281,3 +281,4 @@ JITアセンブラXbyakを使ってみる（その２）: xbyak2
 JITアセンブラXbyakを使ってみる（その３）: xbyak3
 JITアセンブラXbyakを使ってみる（その４）: xbyak4
 確率分布におけるモーメント母関数とその応用: mgf
+累積分布関数をソートで求める(Python版): cdf_python

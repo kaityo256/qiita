@@ -35,6 +35,9 @@ plt.plot(d)
 plt.show()
 ```
 
+![image0.png](image0.png)
+
+
 なんか1のまわりに揺らいでるっぽいですね。
 
 ヒストグラムを作って確率密度関数を求めよう。`matplotlib.pyplot.hist`でも求まるのだが、値の受け取り方の趣味で`numpy.histogram`を使う。
@@ -46,6 +49,8 @@ hy = hy / N
 plt.plot(hx,hy)
 plt.show()
 ```
+
+![image1.png](image1.png)
 
 なんかガウス分布っぽいけれど、かなりカクカクしていますね。
 
@@ -91,6 +96,9 @@ sy = [i/N for i in range(N)]
 plt.plot(sx, sy)
 plt.show()
 ```
+
+![image2.png](image2.png)
+
 
 わりと綺麗な誤差関数が得られた。先ほどと同様に、これを誤差関数だと思って平均と分散をフィッティングで求めよう。まずはフィッティング用の誤差関数の準備。世の中の誤差関数の定義が微妙なので1足して2で割ったり、引数を√2で割ったりしなければならないことに注意。
 
