@@ -6,10 +6,14 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [累積分布関数をソートで求める(Python版)](cdf_python/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/09e44c0435bd5a972272)
+  * 作成：2020-09-04 23:54:23 +0900
+  * 更新：2020-09-04 23:54:23 +0900
 * [確率分布におけるモーメント母関数とその応用](mgf/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/efcf76479dd276efe822)
   * 作成：2020-09-04 17:07:35 +0900
-  * 更新：2020-09-04 17:07:35 +0900
+  * 更新：2020-09-07 13:02:49 +0900
 * [JITアセンブラXbyakを使ってみる（その４）](xbyak4/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
   * 作成：2020-09-01 01:04:10 +0900
