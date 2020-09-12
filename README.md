@@ -6,6 +6,10 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [CPUのキーワード(ブランド、命令セット、マイクロアーキテクチャ、拡張命令セット)の説明](cpu_keywords/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/656bac4c3871031a4448)
+  * 作成：2020-09-11 22:59:19 +0900
+  * 更新：2020-09-11 22:59:19 +0900
 * [累積分布関数をソートで求める(Python版)](cdf_python/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/09e44c0435bd5a972272)
   * 作成：2020-09-04 23:54:23 +0900
