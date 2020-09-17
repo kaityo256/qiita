@@ -123,5 +123,106 @@ $ ./a.out
 さて、Xbyakでは動的にコードを生成し、実行することができます。それを利用してFizz Buzzを書いてみましょう。以下、意図的に冗長に書いています。
 
 ```cpp:fizzbuzz.cpp
+#include <cstdio>
+#include <cstring>
+#include <xbyak/xbyak.h>
 
+const char *fizz = "Fizz\n";
+const char *buzz = "Buzz\n";
+const char *fizzbuzz = "Fizz Buzz\n";
+
+struct Code : Xbyak::CodeGenerator {
+  Code(int i) {
+    mov(rax, 1);
+    mov(rdi, 1);
+    if (i % 15 == 0) {
+      mov(rbx, (size_t)&fizzbuzz);
+      mov(rsi, ptr[rbx]);
+      mov(rdx, strlen(fizzbuzz));
+      syscall();
+    } else if (i % 3 == 0) {
+      mov(rbx, (size_t)&fizz);
+      mov(rsi, ptr[rbx]);
+      mov(rdx, strlen(fizz));
+      syscall();
+      ret();
+    } else if (i % 5 == 0) {
+      mov(rbx, (size_t)&buzz);
+      mov(rsi, ptr[rbx]);
+      mov(rdx, strlen(buzz));
+      syscall();
+      ret();
+    } else {
+      std::string s = std::to_string(i);
+      int n = s.length();
+      Xbyak::Label num;
+      mov(rsi, num);
+      mov(rdx, n + 1);
+      syscall();
+      ret();
+      L(num);
+      for (int i = 0; i < n; i++) {
+        db(s[i]);
+      }
+      db(0x0a);
+    }
+  }
+};
+
+int main() {
+  for (int i = 1; i < 30; i++) {
+    Code c(i);
+    auto f = c.getCode<void (*)()>();
+    f();
+  }
+}
 ```
+
+コンパイル、実行してみましょう。
+
+```sh
+$ g++ fizzbuzz.cpp
+$ ./a.out
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+Fizz Buzz
+zsh: segmentation fault (core dumped)  ./a.out
+```
+
+i=15を実行した直後にSIGSEGVで死にました。エラーがあるようです。さて、Xbyakはコードジェネレータなので、「C++で書いたコードにバグがあるため、バグのあるアセンブリコードが出力されてエラーになる」という多段構造になっています。なので、まずは「バグのあるアセンブリ」を確認したくなります。
+
+Xbyakは、生成された機械語を出力する機能`Xbyak::CodeGenerator::dump`があります。使ってみましょう。
+
+```cpp
+int main() {
+  Code c(15);
+  c.dump();
+}
+```
+
+実行するとこうなります。
+
+```sh
+$ ./a.out
+B801000000BF01000000BB98B1610048
+8B33BA0A0000000F05
+```
+
+慣れてる人は、この機械語だけ見て「あっ」とか思うのでしょうが、僕はアセンブリをみないとわかりません。
+
+で、Xbyakにアセンブリをダンプする機能無いですか？と聞いたら、[アセンブリを出力する機能は無いので、objdumpを使ってほしい](https://github.com/herumi/xbyak/issues/106)という回答をいただけました。
+
+機械語を読むのにobjdumpを使うというのは考えたのですが、ELFヘッダをつけないといけないのかと思ってました。そのまま読めるオプションがあるとは知りませんでした。
+
