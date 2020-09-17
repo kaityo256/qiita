@@ -15,7 +15,6 @@ struct Code : Xbyak::CodeGenerator {
       mov(rsi, ptr[rbx]);
       mov(rdx, strlen(fizzbuzz));
       syscall();
-      ret();
     } else if (i % 3 == 0) {
       mov(rbx, (size_t)&fizz);
       mov(rsi, ptr[rbx]);
