@@ -51,7 +51,7 @@ void dump_asm(Xbyak::CodeGenerator &c) {
   write(fd, (char *)c.getCode(), c.getSize());
   close(fd);
   char cmd[256];
-  sprintf(cmd, "objdump -M x86-54 -D -b binary -m i386 %s", tempfile);
+  sprintf(cmd, "objdump -D -b binary -m i386 %s", tempfile);
   FILE *fp = popen(cmd, "r");
   if (fp == NULL) {
     return;

@@ -201,7 +201,7 @@ Fizz Buzz
 zsh: segmentation fault (core dumped)  ./a.out
 ```
 
-i=15を実行した直後にSIGSEGVで死にました。エラーがあるようです。さて、Xbyakはコードジェネレータなので、「C++で書いたコードにバグがあるため、バグのあるアセンブリコードが出力されてエラーになる」という多段構造になっています。なので、まずは「バグのあるアセンブリ」を確認したくなります。
+i=15を実行した直後にSIGSEGVで死にました。エラーがあるようです。さて、Xbyakはコードジェネレータなので、「C++で書いたコードにバグがあるため、バグのあるアセンブリコードが出力され、それが実行されてエラーになる」という多段構造になっています。なので、まずは「バグのあるアセンブリ」を確認したくなります。
 
 Xbyakは、生成された機械語を出力する機能`Xbyak::CodeGenerator::dump`があります。使ってみましょう。
 
@@ -226,3 +226,74 @@ B801000000BF01000000BB98B1610048
 
 機械語を読むのにobjdumpを使うというのは考えたのですが、ELFヘッダをつけないといけないのかと思ってました。そのまま読めるオプションがあるとは知りませんでした。
 
+ポイントは以下の通りです。
+
+* `Xbyak::CodeGenerator::getCode`を`(char*)`にキャストすれば機械語のバイト列(の先頭アドレス)が得られる
+* `Xbyak::CodeGenerator::getSize`で命令のバイト数がわかる
+* 機械語をバイナリのままファイルに保存する
+* そのままではELFヘッダが無いので、`objdump`に、ファイル形式(binary)とアーキテクチャ(i386)を教えてやるオプション(`-D -b binary -m i386`)をつけて渡す
+
+XbyakのCodeのインスタンスを受け取って、そのアセンブリを出力する関数はこんな感じにかけるでしょうか。
+
+```cpp
+void dump_asm(Xbyak::CodeGenerator &c) {
+  char tempfile[] = "/tmp/dumpXXXXXX";
+  int fd = mkstemp(tempfile);
+  write(fd, (char *)c.getCode(), c.getSize());
+  close(fd);
+  char cmd[256];
+  sprintf(cmd, "objdump -D -b binary -m i386 %s", tempfile);
+  FILE *fp = popen(cmd, "r");
+  if (fp == NULL) {
+    return;
+  }
+  char buf[1024];
+  while (fgets(buf, sizeof(buf), fp) != NULL) {
+    printf("%s", buf);
+  }
+  remove(tempfile);
+  pclose(fp);
+}
+```
+
+上記は、単に適当にテンポラリファイルを作り、そこに機械語をバイナリで吐いて、`popen`でobjdumpを起動し、その出力をもらっているだけです。こんな風に使います。
+
+```cpp
+int main() {
+  Code c(15);
+  dump_asm(c);
+}
+```
+
+実行結果はこんな感じです。
+
+```sh
+$ ./a.out
+
+/tmp/dumpBlCtjb:     ファイル形式 binary
+
+
+セクション .data の逆アセンブル:
+
+00000000 <.data>:
+   0:   b8 01 00 00 00          mov    $0x1,%eax
+   5:   bf 01 00 00 00          mov    $0x1,%edi
+   a:   48                      dec    %eax
+   b:   bb a8 e1 e1 c7          mov    $0xc7e1e1a8,%ebx
+  10:   18 7f 00                sbb    %bh,0x0(%edi)
+  13:   00 48 8b                add    %cl,-0x75(%eax)
+  16:   33 ba 0a 00 00 00       xor    0xa(%edx),%edi
+  1c:   0f 05                   syscall
+```
+
+最後に`ret`をつけ忘れているのがエラーの原因ですね。
+
+## まとめ
+
+Xbyakのデバッグについて書いてみました。これまでgdbでおいかけてアセンブリを確認していたのですが、これでアセンブリが出力できるようになったので、print文デバッグができるようになりました。例に挙げたコードはわざとらしいですが、本質的には僕が入れたバグと同じです。つまり、いくつかの条件分岐において、あるパスには必要な命令が含まれていなかったのがバグの原因でした。
+
+Xbyakは「コードジェネレーター」であり、C++でアセンブリを組み上げるためのツールです。なので、組み込み関数やインラインアセンブラとは全く違う哲学でコードを組む必要があります(静的なコードならJITを使う旨味が無いので)。そのあたりに慣れるのに時間がかかりました。
+
+Xbyakにもだいぶ慣れてきた気がするので、そろそろ本質的なコードを書いてみたいですね。
+
+(続く？)
