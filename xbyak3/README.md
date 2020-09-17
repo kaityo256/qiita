@@ -4,6 +4,7 @@
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
 * [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)←イマココ
 * [その４：Xbyakからの関数呼び出し](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
+* [その５：Xbyakにおけるデバッグ](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)
 
 ## はじめに
 

@@ -4,6 +4,7 @@
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
 * [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)
 * [その４：Xbyakからの関数呼び出し](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)←イマココ
+* [その５：Xbyakにおけるデバッグ](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)
 
 ## はじめに
 
@@ -496,4 +497,4 @@ Xbyakから関数呼び出しをして、SIMDレジスタの中身を表示す�
 
 組み込み関数を使うよりはアセンブリに近く、生のアセンブリを書くよりはいろいろ便利、Xbyakはそんなところに位置している気がします・・・が、まだ使いこなせる気がしません・・・。
 
-(続く？)
+[続く](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)

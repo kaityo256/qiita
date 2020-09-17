@@ -1,10 +1,10 @@
-# JITアセンブラXbyakを使ってみる（その４）
+# JITアセンブラXbyakを使ってみる（その５）
 
 * [その１：Xbyakの概要](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
 * [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)
 * [その４：Xbyakからの関数呼び出し](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
-* その５：XByakにおけるデバッグ←イマココ
+* [その５：Xbyakにおけるデバッグ](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)←イマココ
 
 ## はじめに
 
@@ -28,7 +28,7 @@
 
 これをXbyakで実装するとこんな感じでしょうか。以下はLinuxのシステムコールを使っているので、Linuxでしか動きません。
 
-```cpp:hello.cpp
+```cpp
 #include <cstdio>
 #include <cstring>
 #include <xbyak/xbyak.h>
@@ -64,7 +64,7 @@ Hello World!
 
 さて、ここまでのコードでは、単にグローバル変数を表示しているだけの静的なコードなのでXbyak的ではありません。次に、任意の桁数の数字を表示するコードを書いてみましょう。Xbyakは、実行時にコードを作ることができます。普通に組むなら、桁数をカウントし、例えばスタックに文字列をpushして、そのアドレスを表示、などとするのでしょうが、Xbyakなら`db`のような静的なディレクティブを動的に使うことができます。こんな感じです。
 
-```cpp:num.cpp
+```cpp
 #include <cstdio>
 #include <cstring>
 #include <xbyak/xbyak.h>
@@ -122,7 +122,7 @@ $ ./a.out
 
 さて、Xbyakでは動的にコードを生成し、実行することができます。それを利用してFizz Buzzを書いてみましょう。以下、意図的に冗長に書いています。
 
-```cpp:fizzbuzz.cpp
+```cpp
 #include <cstdio>
 #include <cstring>
 #include <xbyak/xbyak.h>
@@ -222,9 +222,9 @@ B801000000BF01000000BB98B1610048
 
 慣れてる人は、この機械語だけ見て「あっ」とか思うのでしょうが、僕はアセンブリをみないとわかりません。
 
-で、Xbyakにアセンブリをダンプする機能無いですか？と聞いたら、[アセンブリを出力する機能は無いので、objdumpを使ってほしい](https://github.com/herumi/xbyak/issues/106)という回答をいただけました。
+で、「Xbyakにアセンブリをダンプする機能無いですか？」と聞いたら、「[アセンブリを出力する機能は無いので、objdumpを使ってほしい](https://github.com/herumi/xbyak/issues/106)」という回答をいただけました。
 
-機械語を読むのにobjdumpを使うというのは考えたのですが、ELFヘッダをつけないといけないのかと思ってました。そのまま読めるオプションがあるとは知りませんでした。
+機械語を読むのにobjdumpを使うというのは考えたのですが、ELFヘッダをつけないといけないかなと思ってました。そのまま読めるオプションがあるとは知りませんでした。
 
 ポイントは以下の通りです。
 

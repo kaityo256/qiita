@@ -4,6 +4,7 @@
 * [その２：数値計算屋のハマりどころ](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)←イマココ
 * [その３：AAarch64向けの環境構築](https://qiita.com/kaityo256/items/012f858630f32672e05d)
 * [その４：Xbyakからの関数呼び出し](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
+* [その５：Xbyakにおけるデバッグ](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)
 
 (2020年8月31日追記) 本記事執筆時に、Xbyakから関数呼び出しができない、グローバル変数にアクセスできないと誤解していましたが、普通にできるようです。詳細は光成さんの[Xbyakのノウハウ](https://github.com/herumi/blog/blob/master/x64/xbyak-knowhow.md)を参照してください。
 
