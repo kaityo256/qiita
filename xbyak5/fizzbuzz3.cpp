@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cstring>
-#include <xbyak/xbyak.h>
 #include <fstream>
+#include <xbyak/xbyak.h>
 
 const char *fizz = "Fizz\n";
 const char *buzz = "Buzz\n";
@@ -45,19 +45,22 @@ struct Code : Xbyak::CodeGenerator {
   }
 };
 
-void dump_asm(Xbyak::CodeGenerator &c){
-  std::ofstream ofs("temp.dump", std::ios::binary);
-  ofs.write((char*)c.getCode(), c.getSize());
-  ofs.close();
-  const char *cmd = "objdump -M x86-54 -D -b binary -m i386 temp.dump";
+void dump_asm(Xbyak::CodeGenerator &c) {
+  char tempfile[] = "/tmp/dumpXXXXXX";
+  int fd = mkstemp(tempfile);
+  write(fd, (char *)c.getCode(), c.getSize());
+  close(fd);
+  char cmd[256];
+  sprintf(cmd, "objdump -M x86-54 -D -b binary -m i386 %s", tempfile);
   FILE *fp = popen(cmd, "r");
-  if (fp==NULL){
+  if (fp == NULL) {
     return;
   }
   char buf[1024];
-  while(fgets(buf, sizeof(buf), fp) !=NULL){
+  while (fgets(buf, sizeof(buf), fp) != NULL) {
     printf("%s", buf);
   }
+  remove(tempfile);
   pclose(fp);
 }
 
