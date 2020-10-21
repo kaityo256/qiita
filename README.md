@@ -6,10 +6,14 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [JITアセンブラXbyakを使ってみる（その５）](xbyak5/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)
+  * 作成：2020-09-17 22:14:33 +0900
+  * 更新：2020-09-17 22:15:01 +0900
 * [CPUのキーワード(ブランド、命令セット、マイクロアーキテクチャ、拡張命令セット)の説明](cpu_keywords/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/656bac4c3871031a4448)
   * 作成：2020-09-11 22:59:19 +0900
-  * 更新：2020-09-11 22:59:19 +0900
+  * 更新：2020-09-15 13:10:25 +0900
 * [累積分布関数をソートで求める(Python版)](cdf_python/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/09e44c0435bd5a972272)
   * 作成：2020-09-04 23:54:23 +0900
@@ -21,19 +25,19 @@ Qiitaに投稿した記事のアーカイブ
 * [JITアセンブラXbyakを使ってみる（その４）](xbyak4/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
   * 作成：2020-09-01 01:04:10 +0900
-  * 更新：2020-09-01 01:16:05 +0900
+  * 更新：2020-09-17 22:17:35 +0900
 * [JITアセンブラXbyakを使ってみる（その３）](xbyak3/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/012f858630f32672e05d)
   * 作成：2020-08-30 11:28:09 +0900
-  * 更新：2020-09-01 01:06:37 +0900
+  * 更新：2020-09-17 22:16:45 +0900
 * [JITアセンブラXbyakを使ってみる（その２）](xbyak2/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/948eb0c9a69d2f474614)
   * 作成：2020-08-29 01:26:38 +0900
-  * 更新：2020-09-01 01:06:54 +0900
+  * 更新：2020-09-17 22:16:12 +0900
 * [JITアセンブラXbyakを使ってみる（その１）](xbyak1/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/a9e6d32f20096d791817)
   * 作成：2020-08-28 15:41:04 +0900
-  * 更新：2020-09-01 01:07:55 +0900
+  * 更新：2020-09-17 22:15:54 +0900
 * [Qiitaに投稿した記事をGitHub用にエクスポートする](qiita_export/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/cd39eb768a944dad4085)
   * 作成：2020-08-21 23:59:48 +0900
