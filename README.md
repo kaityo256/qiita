@@ -6,6 +6,10 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [大名行列を特異値分解してみる](daimyo_svd/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/78b16c58228e131f8144)
+  * 作成：2020-10-21 15:47:04 +0900
+  * 更新：2020-10-24 13:37:17 +0900
 * [JITアセンブラXbyakを使ってみる（その５）](xbyak5/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)
   * 作成：2020-09-17 22:14:33 +0900
