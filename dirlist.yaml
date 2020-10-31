@@ -1,4 +1,5 @@
 ---
+混ぜるな危険！ndarrayとmatrix: ndarray_matrix
 大名行列を特異値分解してみる: daimyo_svd
 任意の確率密度を持つ乱数を作る: 
 JITアセンブラXbyakを使ってみる（その５）: xbyak5
