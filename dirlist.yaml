@@ -1,7 +1,7 @@
 ---
 混ぜるな危険！ndarrayとmatrix: ndarray_matrix
 大名行列を特異値分解してみる: daimyo_svd
-任意の確率密度を持つ乱数を作る: 
+任意の確率密度を持つ乱数を作る: rand_inversion
 JITアセンブラXbyakを使ってみる（その５）: xbyak5
 CPUのキーワード(ブランド、命令セット、マイクロアーキテクチャ、拡張命令セット)の説明: cpu_keywords
 累積分布関数をソートで求める(Python版): cdf_python

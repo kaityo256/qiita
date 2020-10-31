@@ -6,10 +6,18 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [混ぜるな危険！ndarrayとmatrix](ndarray_matrix/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/2320282ceff389d95ac8)
+  * 作成：2020-10-25 00:13:41 +0900
+  * 更新：2020-10-25 00:15:01 +0900
 * [大名行列を特異値分解してみる](daimyo_svd/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/78b16c58228e131f8144)
   * 作成：2020-10-21 15:47:04 +0900
   * 更新：2020-10-24 13:37:17 +0900
+* [任意の確率密度を持つ乱数を作る](rand_inversion/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/95b4a3f61c963f08c899)
+  * 作成：2020-09-22 00:55:47 +0900
+  * 更新：2020-09-22 01:06:06 +0900
 * [JITアセンブラXbyakを使ってみる（その５）](xbyak5/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/78e3e59f879c99a12945)
   * 作成：2020-09-17 22:14:33 +0900
