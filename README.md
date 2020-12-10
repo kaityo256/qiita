@@ -6,10 +6,14 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [スパコンポエムAdC2020 Day4 スパコンの使いやすさとは](sp_poem/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/a98cc311a504751b08a9)
+  * 作成：2020-12-03 19:06:10 +0900
+  * 更新：2020-12-04 07:02:43 +0900
 * [大名行列をTucker分解してみる](daimyo_tucker/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/2e3f45377a6b9760f3e0)
   * 作成：2020-11-01 13:56:51 +0900
-  * 更新：2020-11-15 00:54:07 +0900
+  * 更新：2020-11-15 01:32:32 +0900
 * [混ぜるな危険！ndarrayとmatrix](ndarray_matrix/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/2320282ceff389d95ac8)
   * 作成：2020-10-25 00:13:41 +0900
