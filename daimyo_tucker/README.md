@@ -10,7 +10,12 @@
 
 [^1]: もしかしたら一般論があるのかもしれませんが、筆者は知りません。
 
-TODO: コードをGitHubに上げる
+コードは以下においておきます。
+
+[https://github.com/kaityo256/daimyo_tucker](https://github.com/kaityo256/daimyo_tucker)
+
+Google ColabでJupyter Notebookを開きたい場合は[こちら](https://colab.research.google.com/github/kaityo256/daimyo_tucker/blob/main/daimyo_tucker.ipynb)をクリックしてください。
+
 
 ## Tucker分解
 
