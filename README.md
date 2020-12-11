@@ -6,6 +6,10 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [スパコンポエムAdC2020 Day11 スパコンの信頼性について](sp_poem2/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/cb81f7737009d67e2574)
+  * 作成：2020-12-10 17:55:11 +0900
+  * 更新：2020-12-11 11:51:24 +0900
 * [スパコンポエムAdC2020 Day4 スパコンの使いやすさとは](sp_poem/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/a98cc311a504751b08a9)
   * 作成：2020-12-03 19:06:10 +0900
