@@ -201,4 +201,13 @@ LSBから2つのビットが、k/8ビット毎にたっているのがわかる�
 
 SVEを使うにあたって最初の関門(個人の感想です)である、プレディケートレジスタについてまとめました。僕はマニュアルを読んでもよく理解できず、こうして可視化しないと動作がなかなか理解できません。本稿が似たような人の症状改善につながれば幸いです。
 
+## 参考文献
+
+ほぼ公式マニュアルしかないのつらい。
+
+* [Arm® A64 Instruction Set Architecture: Armv8, for Armv8-A architecture profile](https://developer.arm.com/docs/ddi0596/h/a64-sve-instructions-alphabetic-order)
+* [ARM C Language Extensions for SVE](https://developer.arm.com/documentation/100987/0000/)
+* [A64FX® Microarchitecture Manual 日本語](https://github.com/fujitsu/A64FX/blob/master/doc/A64FX_Microarchitecture_Manual_jp_1.3.pdf)
+* [Arm SIMD intrinsic C++](https://qiita.com/NatsukiLab/items/ad6e9967f7eccadd9c99)
+
 つづく？
