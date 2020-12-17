@@ -6,10 +6,22 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [WSL2でDOCKER_HOSTが指定されているとDockerが動かない](docker_host/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/a4236923678976d68984)
+  * 作成：2020-12-16 22:35:41 +0900
+  * 更新：2020-12-16 22:38:23 +0900
+* [ARM SVEの組み込み関数を使う（その１）](sve_intrinsic1/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)
+  * 作成：2020-12-16 18:31:15 +0900
+  * 更新：2020-12-16 18:31:15 +0900
+* [MacのgnuplotでPDFの文字がおかしくなる問題](mac_gnuplot/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/4f0dcdfa2d0c4d5bfa38)
+  * 作成：2020-12-14 22:52:52 +0900
+  * 更新：2020-12-14 22:52:52 +0900
 * [スパコンポエムAdC2020 Day11 スパコンの信頼性について](sp_poem2/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/cb81f7737009d67e2574)
   * 作成：2020-12-10 17:55:11 +0900
-  * 更新：2020-12-11 11:51:24 +0900
+  * 更新：2020-12-12 15:52:58 +0900
 * [スパコンポエムAdC2020 Day4 スパコンの使いやすさとは](sp_poem/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/a98cc311a504751b08a9)
   * 作成：2020-12-03 19:06:10 +0900
