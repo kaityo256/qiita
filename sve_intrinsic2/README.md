@@ -1,11 +1,12 @@
 # ARM SVEの組み込み関数を使う（その２）
 
+
 みなさん、山に登っていますか？＞直喩
 
 ARM SVEの組み込み関数の使い方の解説を続けます。
 
-* その１：プレディケートレジスタ
-* その２：レジスタへのロード ← イマココ
+* [その１：プレディケートレジスタ](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)
+* [その２：レジスタへのロード](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630) ← イマココ
 
 コードを以下に置いておきます。まだ開発中なので、記事を書きながら修正していくと思います。
 
@@ -13,7 +14,7 @@ ARM SVEの組み込み関数の使い方の解説を続けます。
 
 コンパイルコマンドが長いので`ag++`という名前でaliasを張っています。詳細は「その１」を見てください。
 
-## メモリからのロード
+## メモリからレジスタへのロード
 
 SIMDを使うためには、メモリからSIMDレジスタにデータを複数もってこないといけません。その際、あちこちからいっきに持ってきたり、持ってくるデータをマスクで選んだりといろいろありますが、とりあえずもっとも単純に、メモリ上に連続で並んでいるデータをごそっとレジスタに載せるコードを書いてみます。
 
@@ -51,7 +52,7 @@ void svshow(svfloat64_t va){
 
 この関数は、`svfloat64_t`型の変数を受け取り、その中身をダンプする関数です。`std::vector<double> a`に`svst1_f64`でストアすることでダンプしています。ベースとなるポインタは、`a.data()`で取れます。本当は`vector`の型として`double`ではなく`float64_t`を使うべきなのかもしれませんが、`arm_sve.h`をインクルードしていないところでは`float64_t`が使えないので、とりあえず`double`を使うことにします。
 
-### 単純ロード
+## 単純ロード
 
 まずはすごく単純に、8個ならんだ`double`をSIMDレジスタに読み込んでみましょう。「1,2,3,4,5,6,7,8」と並んだデータを持つ`std::vector<double>`を作り、それを全部trueのプレディケータを使って`svfloat64_t`型の変数`va`にロードしています。それを先ほど作った`svshow`関数に食わせてみます。
 
@@ -119,7 +120,7 @@ SIMDレジスタ型は`_f64`といった型の指定がありますが、プレ�
 
 先ほどと同様、下位から二つ要素を持ってくるために、`SV_VL2`を指定したプレディケータを作ったとしましょう。しかし、持ってくるデータは`double`(`float64_t`)なのに、`svptrue_pat_b32`と、対応しないビット数のプレディケータを作ってしまったとします。`float64_t`型のデータをマスクする時は、プレディケータのLSBから1ビット目、9ビット目、17ビット目……と、8ビットごとのビットしかチェックしないため、`_b32`で作った場合は二つ目のビットが無視され、1つしかロードされません。
 
-![load_pat_fail](load_pat_fail.png)
+![image0.png](image0.png)
 
 この動作を確認するコードを書いてみましょう。
 
@@ -220,4 +221,3 @@ SVEをつかった最も単純なunextended loadとマスク処理、特に`whil
 * [ARM C Language Extensions for SVE](https://developer.arm.com/documentation/100987/0000/)
 * [A64FX® Microarchitecture Manual 日本語](https://github.com/fujitsu/A64FX/blob/master/doc/A64FX_Microarchitecture_Manual_jp_1.3.pdf)
 * [Arm SIMD intrinsic C++](https://qiita.com/NatsukiLab/items/ad6e9967f7eccadd9c99)
-

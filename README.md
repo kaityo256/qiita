@@ -6,6 +6,10 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [ARM SVEの組み込み関数を使う（その２）](sve_intrinsic2/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630)
+  * 作成：2020-12-18 22:54:29 +0900
+  * 更新：2020-12-18 22:54:51 +0900
 * [WSL2でDOCKER_HOSTが指定されているとDockerが動かない](docker_host/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/a4236923678976d68984)
   * 作成：2020-12-16 22:35:41 +0900
@@ -13,7 +17,7 @@ Qiitaに投稿した記事のアーカイブ
 * [ARM SVEの組み込み関数を使う（その１）](sve_intrinsic1/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)
   * 作成：2020-12-16 18:31:15 +0900
-  * 更新：2020-12-16 18:31:15 +0900
+  * 更新：2020-12-18 22:55:45 +0900
 * [MacのgnuplotでPDFの文字がおかしくなる問題](mac_gnuplot/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/4f0dcdfa2d0c4d5bfa38)
   * 作成：2020-12-14 22:52:52 +0900

@@ -6,6 +6,13 @@
 
 スパコン「富岳」が採用するA64fxという石はAArch64という64ビットARMの命令セットを採用していますが、さらにHPC向けにScalable Vector Extensions (SVE)という拡張命令セットを持っています。この命令セットは、名前が示す通りスケーラブル、つまりSIMD幅に依存しない形でプログラムが書けるようになっています。これを使って遊んでみましょう、というのが本稿の目的です。「その１」とついていますが、続くかどうかはノストラダムスにもわかりません。
 
+* [その１：プレディケートレジスタ](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)←イマココ
+* [その２：レジスタへのロード](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630) 
+
+リポジトリを以下に置いておきます。まだ開発中なので、記事を書きながら修正していくと思います。
+
+[https://github.com/kaityo256/sve_intrinsic_samples](https://github.com/kaityo256/sve_intrinsic_samples)
+
 ## 環境構築
 
 現在のところ、AAarch64+SVEという命令セットを実装した石は富士通のA64fxだけです。これを持っていないひとは、QEMU上で遊ぶと良いでしょう。AAarch64+SVEに対応したGCCが手軽に手に入るArch LinuxのDockerイメージを使うと良いと思います。
@@ -89,27 +96,24 @@ SVEはSIMD幅を固定しない命令セットであるため、基本的にマ�
 プレディケートレジスタがハードウェア的にどう実装されているかよくわかりませんが、SVEが、8ビット整数のSIMD命令を備えていることから、最低でも512/8=64ビットの情報を持っていることになります。これを可視化する関数を書いてみましょう。
 
 ```cpp
-#include <iostream>
-#include <arm_sve.h>
-#include <vector>
-
-void show_ppr(svbool_t tp){
-  std::vector<int8_t> a(64);
-  std::vector<int8_t> b(64);
+void show_ppr(svbool_t tp) {
+  int n = svcntb();
+  std::vector<int8_t> a(n);
+  std::vector<int8_t> b(n);
   std::fill(a.begin(), a.end(), 1);
   std::fill(b.begin(), b.end(), 0);
   svint8_t va = svld1_s8(tp, a.data());
   svst1_s8(tp, b.data(), va);
-  for(int i=0;i<64;i++){
-    std::cout << (int)b[63-i];
+  for (int i = 0; i < n; i++) {
+    std::cout << (int)b[n - i - 1];
   }
   std::cout << std::endl;
 }
 ```
 
-関数`show_ppr`は、プレディケートレジスタ`svbool_t`を受け取って、その中身を表示します。ここでは、長さ64の`int8_t`のvectorを作って、`a`を1に、`b`を0に初期化しておき、
+関数`show_ppr`は、プレディケートレジスタ`svbool_t`を受け取って、その中身を表示します。一応SVEの理念にしたがって、ベクトルの中に何個`int8_t`があるかを`svcntb`で数えています。ここでは`n`として64が返ってきます。そこで長さn=64の`int8_t`のvectorを作って、`a`を1に、`b`を0に初期化しておき、
 
-1. SVEレジスタにaの要素(1)を64個ロード(svld1_s8)
+1. SVEレジスタにaの要素(1)をベクトルに入るだけ(64個)ロード(svld1_s8)
 2. レジスタからbへプレディケートレジスタ(tp)を使ってマスク処理しながらストア(svst1_s8)
 3. bの中身を表示
 
@@ -210,4 +214,4 @@ SVEを使うにあたって最初の関門(個人の感想です)である、プ
 * [A64FX® Microarchitecture Manual 日本語](https://github.com/fujitsu/A64FX/blob/master/doc/A64FX_Microarchitecture_Manual_jp_1.3.pdf)
 * [Arm SIMD intrinsic C++](https://qiita.com/NatsukiLab/items/ad6e9967f7eccadd9c99)
 
-つづく？
+[つづく](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630)
