@@ -1,4 +1,6 @@
 ---
+テンソルのグラフ表現: tensor_graph
+ARM SVEの組み込み関数を使う（その３）: sve_intrinsic3
 ARM SVEの組み込み関数を使う（その２）: sve_intrinsic2
 WSL2でDOCKER_HOSTが指定されているとDockerが動かない: docker_host
 ARM SVEの組み込み関数を使う（その１）: sve_intrinsic1
