@@ -1,20 +1,20 @@
 # ARM SVEの組み込み関数を使う（その４）
 
 みなさん、山に登っていますか？＞直喩
-僕はあまり登れていません。
+僕はまだあまり登れていません。
 
 ARM SVEの組み込み関数の使い方の解説を続けます。
 
 * [その１：プレディケートレジスタ](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)
 * [その２：レジスタへのロード](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630)
 * [その３：gather/scatter](https://qiita.com/kaityo256/items/7ced2749875e2bab89e6)
-* その４：水平演算
+* [その４：水平演算](https://qiita.com/kaityo256/items/3d9767ed41fa450a4fe8)←イマココ
 
 コードを以下に置いておきます。まだ開発中なので、記事を書きながら修正していくと思います。
 
 [https://github.com/kaityo256/sve_intrinsic_samples](https://github.com/kaityo256/sve_intrinsic_samples)
 
-コンパイルコマンドが長いので`ag++`という名前でaliasを張っています。詳細は「[その１](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)」を見てください。
+コンパイル、実行方法については「[その１](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)」を見てください。
 
 ## 水平演算について
 
@@ -45,7 +45,11 @@ double sum(double *a, const int n){
 
 ## 水平加算
 
-水平加算とは、SIMDレジスタ内の要素の総和を返す演算です。ARM SVEには、水平加算用の命令としてADDAとADDVが用意されています。ADDAは、素直に左から足していくのにたいして、ADDVはペアごとに足していきます。なのでADDAに比べてADDVの方が倍近く早いですが、ADDVはスカラーループと同じ結果が得られるのに対して、ADDVは場合によっては異なる結果を与えることがあります。
+水平加算とは、SIMDレジスタ内の要素の総和を返す演算です。ARM SVEには、水平加算用の命令としてADDAとADDVが用意されています。ADDAは、素直に左から足していくのにたいして、ADDVはペアごとに足していきます。こんな感じです。
+
+![image0.png](image0.png)
+
+なのでADDAに比べてADDVの方が倍近く早いですが、ADDVはスカラーループと同じ結果が得られるのに対して、ADDVは場合によっては異なる結果を与えることがあります。
 
 桁落ちの様子がわかりやすいように、$10^{-8}$と$10^8$が交互にならんだ8個のデータをSIMDレジスタにロードして、水平加算してみましょう。
 
