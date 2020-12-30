@@ -6,6 +6,10 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [ARM SVEの組み込み関数を使う（その４）](sve_intrinsic4/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/3d9767ed41fa450a4fe8)
+  * 作成：2020-12-30 22:24:49 +0900
+  * 更新：2020-12-30 22:26:05 +0900
 * [大名行列をHOOIでTucker分解してみる](daimyo_hooi/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/ab9555ada7b07a65bc12)
   * 作成：2020-12-25 20:49:19 +0900
@@ -17,11 +21,11 @@ Qiitaに投稿した記事のアーカイブ
 * [ARM SVEの組み込み関数を使う（その３）](sve_intrinsic3/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/7ced2749875e2bab89e6)
   * 作成：2020-12-23 17:57:15 +0900
-  * 更新：2020-12-23 18:09:07 +0900
+  * 更新：2020-12-30 22:27:59 +0900
 * [ARM SVEの組み込み関数を使う（その２）](sve_intrinsic2/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630)
   * 作成：2020-12-18 22:54:29 +0900
-  * 更新：2020-12-23 17:58:58 +0900
+  * 更新：2020-12-30 22:26:35 +0900
 * [WSL2でDOCKER_HOSTが指定されているとDockerが動かない](docker_host/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/a4236923678976d68984)
   * 作成：2020-12-16 22:35:41 +0900
@@ -29,7 +33,7 @@ Qiitaに投稿した記事のアーカイブ
 * [ARM SVEの組み込み関数を使う（その１）](sve_intrinsic1/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)
   * 作成：2020-12-16 18:31:15 +0900
-  * 更新：2020-12-23 17:58:10 +0900
+  * 更新：2020-12-30 22:26:53 +0900
 * [スパコンポエムAdC2020 Day19 CP-PACS](sp_poem3/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/e3b88bb7799599be34ee)
   * 作成：2020-12-15 23:07:48 +0900
