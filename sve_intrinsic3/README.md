@@ -8,6 +8,7 @@ ARM SVEの組み込み関数の使い方の解説を続けます。
 * [その１：プレディケートレジスタ](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)
 * [その２：レジスタへのロード](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630)
 * [その３：gather/scatter](https://qiita.com/kaityo256/items/7ced2749875e2bab89e6) ← イマココ
+* [その４：水平演算](https://qiita.com/kaityo256/items/3d9767ed41fa450a4fe8)
 
 コードを以下に置いておきます。まだ開発中なので、記事を書きながら修正していくと思います。
 
@@ -193,6 +194,8 @@ b[28] = 7.000000
 ## まとめ
 
 分子動力学法ででてくる間接参照に対応するためのgather/scatterの動作を確認しました。これとプレディケータを組み合わせれば、ナイーブなSIMD化はできるはずです。ARM SVEのロード/ストア命令は死ぬほどたくさんあり、触ってはいけないところを触った時の処理とかいろいろあるらしいのですが、まだちゃんと理解できていません。識者による解説を待ちます。
+
+[つづく](https://qiita.com/kaityo256/items/3d9767ed41fa450a4fe8)
 
 ## 参考文献
 

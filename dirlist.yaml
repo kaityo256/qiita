@@ -1,4 +1,5 @@
 ---
+ARM SVEの組み込み関数を使う（その４）: sve_intrinsic4
 大名行列をHOOIでTucker分解してみる: daimyo_hooi
 テンソルのグラフ表現: tensor_graph
 ARM SVEの組み込み関数を使う（その３）: sve_intrinsic3

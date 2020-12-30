@@ -6,9 +6,11 @@
 
 スパコン「富岳」が採用するA64fxという石はAArch64という64ビットARMの命令セットを採用していますが、さらにHPC向けにScalable Vector Extensions (SVE)という拡張命令セットを持っています。この命令セットは、名前が示す通りスケーラブル、つまりSIMD幅に依存しない形でプログラムが書けるようになっています。これを使って遊んでみましょう、というのが本稿の目的です。「その１」とついていますが、続くかどうかはノストラダムスにもわかりません。
 
+
 * [その１：プレディケートレジスタ](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)←イマココ
 * [その２：レジスタへのロード](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630)
 * [その３：gather/scatter](https://qiita.com/kaityo256/items/7ced2749875e2bab89e6)
+* [その４：水平演算](https://qiita.com/kaityo256/items/3d9767ed41fa450a4fe8)
 
 リポジトリを以下に置いておきます。まだ開発中なので、記事を書きながら修正していくと思います。
 

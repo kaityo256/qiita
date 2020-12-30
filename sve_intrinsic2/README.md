@@ -8,6 +8,7 @@ ARM SVEの組み込み関数の使い方の解説を続けます。
 * [その１：プレディケートレジスタ](https://qiita.com/kaityo256/items/71d4d3f6b2b77fd04cbb)
 * [その２：レジスタへのロード](https://qiita.com/kaityo256/items/ac1e84f1c79fdf478630)←イマココ
 * [その３：gather/scatter](https://qiita.com/kaityo256/items/7ced2749875e2bab89e6)
+* [その４：水平演算](https://qiita.com/kaityo256/items/3d9767ed41fa450a4fe8)
 
 コードを以下に置いておきます。まだ開発中なので、記事を書きながら修正していくと思います。
 
