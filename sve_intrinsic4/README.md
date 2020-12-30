@@ -45,3 +45,58 @@ double sum(double *a, const int n){
 
 ## 水平加算
 
+水平加算とは、SIMDレジスタ内の要素の総和を返す演算です。ARM SVEには、スカラー演算と同じ結果を返すADDAと、ツリー型に和を取るADDVが用意されています。この二つは桁落ちの仕方が異なります。桁落ちの様子がわかりやすいように、$10^{-8}$と$10^8$が交互にならんだ8個のデータをSIMDレジスタにロードして、水平加算してみましょう。
+
+```cpp
+void add_vector() {
+  const double a = 1e-8;
+  const double b = 1e8;
+  double d[8] = {a, b, a, b, a, b, a, b};
+  svbool_t tp = svptrue_b64();
+  svfloat64_t va = svld1_f64(tp, d);
+  float64_t sum = svadda_f64(tp, 0.0, va);
+  printf("adda = %.15f\n", sum);
+  float64_t sum2 = svaddv_f64(tp, va);
+  printf("addv = %.15f\n", sum2);
+}
+```
+
+結果はこうなります。
+
+```sh
+adda = 400000000.000000000000000
+addv = 400000000.000000059604645
+```
+
+ADDAは、素直に左から足していくのにたいして、ADDVは、ペアごとに足していきます。なので、ADDVはスカラーループと同じ結果が得られますが、ADDVは丸めによっては異なる結果を与えます。ADDAが素直なループ、ADDVがツリー型の和であることを確認するため、等価なスカラーコードを書いてみましょう。
+
+```cpp
+void add_scalar() {
+  const double a = 1e-8;
+  const double b = 1e8;
+  double d[8] = {a, b, a, b, a, b, a, b};
+  double sum = 0.0;
+  for (int i = 0; i < 8; i++) {
+    sum += d[i];
+  }
+  printf("adda = %.15f\n", sum);
+  double s1 = d[0] + d[1];
+  double s2 = d[2] + d[3];
+  double s3 = d[4] + d[5];
+  double s4 = d[6] + d[7];
+  double s12 = s1 + s2;
+  double s34 = s3 + s4;
+  double sum2 = s12 + s34;
+  printf("addv = %.15f\n", sum2);
+}
+```
+
+実行結果はこうなります。
+
+```sh
+adda = 400000000.000000000000000
+addv = 400000000.000000059604645
+```
+
+それぞれ、先ほどのADDA、ADDVを使った場合と同じ結果が得られたのがわかるかと思います。
+
