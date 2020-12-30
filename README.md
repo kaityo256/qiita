@@ -6,6 +6,10 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [大名行列をHOOIでTucker分解してみる](daimyo_hooi/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/ab9555ada7b07a65bc12)
+  * 作成：2020-12-25 20:49:19 +0900
+  * 更新：2020-12-25 20:49:19 +0900
 * [テンソルのグラフ表現](tensor_graph/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/d8195fb9fd1e0bc49314)
   * 作成：2020-12-25 00:49:47 +0900
