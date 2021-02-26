@@ -23,11 +23,11 @@ $$
 実際に上記の量を計算して3になるか確認してみましょう。平均0、分散$\sigma^2$のガウス分布に従うN個の確率変数$\hat{x}_1, \hat{x}_2, \cdots, \hat{x}_N$を生成し、そこから
 
 $$
-\left< x^2 \right>_N = \frac{\sum_i x_i^2}{N}
+\left<x^2 \right>_N = \frac{ \sum_i \hat{x}_i^2}{N}
 $$
 
 $$
-\left< x^4 \right>_N = \frac{\sum_i x_i^4}{N}
+\left<x^4 \right>_N = \frac{\sum_i \hat{x}_i^4}{N}
 $$
 
 を計算します。そこから
@@ -50,7 +50,7 @@ fig, ax = plt.subplots(facecolor='w')
 n, bins, _ = ax.hist(x, bins=100)
 ```
 
-![normal](normal.png)
+![image0.png](image0.png)
 
 ガウス分布になっていますね。では$N$個のデータを受け取って尖度を計算する関数`simple_estimator`を作って、$U_N$を計算します。$U_N$も確率変数になるので、それを`n_trials`回平均することで、$U_N$の期待値を計算し、$N$依存性を見てみましょう。
 
@@ -83,13 +83,13 @@ for n in samples:
 
 [kaityo256/jackknife](https://github.com/kaityo256/jackknife)
 
-また、以下でGoogle Colabで開くことができます。
+また、以下のリンクからコードをGoogle Colabで開くことができます。
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaityo256/jackknife/blob/main/Jackknife.ipynb)
 
 ## サンプル数によるバイアス
 
-### サンプル数依存性の起源
+## サンプル数依存性の起源
 
 まず、先ほどの$N$依存性をプロットしてましょう。$N$が大きいほど$3$に近づいているので、$U_N$を$1/N$に対してプロットしてみます。
 
@@ -112,7 +112,7 @@ plt.show()
 
 結果は以下の通りです。
 
-![](simple.png)
+![image1.png](image1.png)
 
 きれいに$1/N$の依存性が見えます。これがどこから来ているか調べるため、2次のモーメント$\left< x^2 \right>_N$と4次のモーメント$\left< x^4 \right>_N$の$N$依存性を見てみましょう。2次のモーメントは1、4次のモーメントは3になるはずです。
 
@@ -172,9 +172,9 @@ for n in samples:
 
 $N$依存性が出てきました。つまり、$\left< \hat{x}^2 \right>$はちゃんと計算できているが、$1/\left< \hat{x}^2 \right>^2$の計算で変なバイアスが入るということです。これは、確率変数の期待値にバイアスがなくても、確率変数の期待値の(非線形)関数にはバイアスが入るからです。
 
-### 確率変数の期待値の関数
+## 確率変数の期待値の関数
 
-確率変数$\hat{r}$を考えます。期待値は$\left<\hat{r}\right> = \bar{r}$、分散は$\left<(\hat{r}-\mu_r)^2\right> = \sigma^2_r$であるとしましょう。
+確率変数$\hat{r}$を考えます。期待値は$\left<\hat{r}\right> = \bar{r}$、分散は$\left<(\hat{r}-\bar{r})^2\right> = \sigma^2_r$であるとしましょう。
 
 この変数の期待値$\bar{r}$の関数$f(\bar{r})$を計算したいとします。いま、真の期待値$\bar{r}$は知らないので、この確率変数を$N$個($\hat{r}_1, \hat{r}_1, \cdots, \hat{r}_N$)観測して、その平均を期待値の推定値としましょう。
 
@@ -227,11 +227,17 @@ $$
 
 直観的には、もともと左右対称の分布を持つ確率変数$\hat{r}$に対して、非線形関数$f$を通すことで分布が歪むのがサンプル数に起因するバイアスが出てくる原因と理解できます。
 
-### 尖度の場合
+## 尖度の場合
 
 さて、バイアスの$N$依存性が求まったので、実際に尖度の計算で確認してみましょう。
 
-今、確率変数$\hat{r_i}$にあたるのは、平均0、分散$\sigma^2$のガウス分布に従う確率変数$\hat{x}_i$の自乗、つまり$\hat{r_i} = \hat{x}_i^2$です。したがって、$\bar{r} = \sigma^2$です。$\hat{r}_i$の分散は
+今、確率変数$\hat{r_i}$にあたるのは、平均0、分散$\sigma^2$のガウス分布に従う確率変数の二乗、つまり
+
+$$
+\hat{r_i} = \hat{x}_i^2
+$$
+
+です。したがって、$\bar{r} = \sigma^2$です。$\hat{r}_i$の分散は
 
 $$
 \begin{aligned}
@@ -312,7 +318,7 @@ for n in samples:
 
 ## Jackknife法
 
-### Jackknife Resampling
+## Jackknife Resampling
 
 さて、一般に期待値の非線形関数を計算しようとすると、サンプル数$N$に対して$1/N$のバイアスが乗ることがわかりました。$N$が十分に大きければバイアスを小さくできますが、$N$に対してリニアにしか減らないので面倒です。
 
@@ -342,7 +348,7 @@ $$
 
 $M$個のブロック全てを使った推定値を$\theta(M)$とし、$i$番目のブロックを使わずに作った推定値を$\theta_i(M-1)$とします。
 
-![Jackknife](jackknife.png)
+![image2.png](image2.png)
 
 そして、
 
@@ -366,7 +372,7 @@ $$
 
 として、データの無限大外挿ができることになります。これが[Jackknife法](https://en.wikipedia.org/wiki/Jackknife_resampling)と呼ばれる手法です。
 
-### Jackknife法の実装
+## Jackknife法の実装
 
 Jackknife法を実装してみましょう。$N$個のデータを$B$個ずつのブロック(ビン)に分ける必要がありますが、ここでは適当に$N$の因数のうち$\sqrt{N}$に一番近いものをビンサイズとします。
 
@@ -407,7 +413,7 @@ for n in samples:
 256 3.004119961488022
 ```
 
-1. データをBつずつM個のビンに分け
+1. データをB個ずつM個のビン(ブロック)に分け
 2. そのうちM-1個を使って計算したものをM個作り
 3. その平均を計算し
 4. バイアスを除いた値を推定する

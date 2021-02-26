@@ -6,10 +6,14 @@ Qiitaに投稿した記事のアーカイブ
 
 ## 記事一覧
 
+* [Jackknife法とサンプル数バイアス](jackknife/README.md)
+  * [Qiita](https://qiita.com/kaityo256/items/174347b12717ba49263d)
+  * 作成：2021-02-26 18:58:26 +0900
+  * 更新：2021-02-26 19:01:30 +0900
 * [ARM SVEの組み込み関数を使う（その４）](sve_intrinsic4/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/3d9767ed41fa450a4fe8)
   * 作成：2020-12-30 22:24:49 +0900
-  * 更新：2020-12-30 22:26:05 +0900
+  * 更新：2021-01-01 18:53:34 +0900
 * [大名行列をHOOIでTucker分解してみる](daimyo_hooi/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/ab9555ada7b07a65bc12)
   * 作成：2020-12-25 20:49:19 +0900
@@ -81,7 +85,7 @@ Qiitaに投稿した記事のアーカイブ
 * [確率分布におけるモーメント母関数とその応用](mgf/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/efcf76479dd276efe822)
   * 作成：2020-09-04 17:07:35 +0900
-  * 更新：2020-09-07 13:02:49 +0900
+  * 更新：2021-02-02 08:59:27 +0900
 * [JITアセンブラXbyakを使ってみる（その４）](xbyak4/README.md)
   * [Qiita](https://qiita.com/kaityo256/items/74496f3d927339b12cfc)
   * 作成：2020-09-01 01:04:10 +0900

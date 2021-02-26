@@ -164,7 +164,7 @@ $$
 以下の形の分布をガウス分布と呼ぶ。
 
 $$
-f(x) = C^{-1} \int_{-\infty}^\infty \exp{\left(-\frac{(x-\mu)^2}{2 \sigma^2}\right)} dx
+f(x) = C^{-1} \exp{\left(-\frac{(x-\mu)^2}{2 \sigma^2}\right)}
 $$
 
 ただし$C$は規格化定数であり$\left< 1 \right> = 1$を満たすように選ぶ。
