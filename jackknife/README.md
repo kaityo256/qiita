@@ -79,6 +79,14 @@ for n in samples:
 
 明らかに$N$依存性が見えます。この依存性は何か、そしてどうやって回避するのかを検討するのが本稿の目的です。
 
+コードは以下に置いてあります。
+
+[kaityo256/jackknife](https://github.com/kaityo256/jackknife)
+
+また、以下でGoogle Colabで開くことができます。
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kaityo256/jackknife/blob/main/Jackknife.ipynb)
+
 ## サンプル数によるバイアス
 
 ### サンプル数依存性の起源
