@@ -31,18 +31,15 @@ def export_posts(dir, article)
     end
   end
   # Front matterの作成
-  categories = Array(article['tags']).filter_map { |t| t['name'] }.uniq
-
+  categories = article['tags']
   title = (article['title'] || '').to_s
   yaml_title = title.gsub('"', '\"') # escape double-quotes for YAML
 
   front_matter = +"---\n"
   front_matter << "layout: post\n"
   front_matter << "title: \"#{yaml_title}\"\n"
-  front_matter << "categories:\n"
-  categories.each do |c|
-    front_matter << "  - \"#{c.to_s.gsub('"', '\"')}\"\n"
-  end
+  front_matter << "categories: #{categories}\n"
+  front_matter << "permalink: #{dir}\n"
   front_matter << "---\n\n"
   content = front_matter + content
   out_post_path = File.join(posts_dir, filename)
