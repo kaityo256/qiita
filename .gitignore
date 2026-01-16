@@ -1,3 +1,5 @@
 qiita.yaml
 qiita*.json
 a.out
+vendor
+mysite
