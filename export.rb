@@ -3,9 +3,22 @@
 require 'yaml'
 require 'open-uri'
 require 'fileutils'
+require 'set'
 
-def export_posts(dir, article)
-  export_dir = '/Users/watanabe/github/mysite'
+
+def make_tag(tags,tag_list)
+  new_tags = []
+  tags.split(',').each do|tag|
+    new_tags.append tag_list[tag]
+  end
+  new_tags.append('qiita')
+  new_tags = Set.new(new_tags)
+  new_tags = '[' + new_tags.to_a.join(', ') + ']'
+  new_tags
+end
+
+def export_posts(dir, article, tag_list)
+  export_dir = 'mysite'
   posts_dir  = File.join(export_dir, '_posts')
   created = Time.iso8601(article['created_at']).strftime('%Y-%m-%d')
   filename = "#{created}-#{dir}.md"
@@ -34,11 +47,11 @@ def export_posts(dir, article)
   categories = article['tags']
   title = (article['title'] || '').to_s
   yaml_title = title.gsub('"', '\"') # escape double-quotes for YAML
-
+  tags = make_tag(article['tags'],tag_list)
   front_matter = +"---\n"
   front_matter << "layout: post\n"
   front_matter << "title: \"#{yaml_title}\"\n"
-  front_matter << "categories: #{categories}\n"
+  front_matter << "tags: #{tags}\n"
   front_matter << "permalink: #{dir}\n"
   front_matter << "---\n\n"
   content = front_matter + content
@@ -53,8 +66,9 @@ def export_posts(dir, article)
   end
 end
 
-def main
+def main()
   data = YAML.safe_load(File.open('qiita.yaml'))
+  tag_list = YAML.safe_load(File.open('tags.yaml'))
   dirlist = YAML.safe_load(File.open('dirlist.yaml'))
 
   data.sort! { |a, b| b['created_at'] <=> a['created_at'] }
@@ -63,7 +77,7 @@ def main
     next unless dirlist[title]
 
     dir = dirlist[title]
-    export_posts(dir, article)
+    export_posts(dir, article, tag_list)
   end
 end
 
